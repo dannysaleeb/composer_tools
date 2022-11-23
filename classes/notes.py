@@ -1,8 +1,10 @@
 class Note:
-    def __init__(self, name, midi, freq):
+    def __init__(self, name, midi, frequency, duration, velocity):
         self.name = name
         self.midi = midi
-        self.freq = freq
+        self.freq = frequency
+        self.duration = duration
+        self.velocity = velocity
 
     def __str__(self):
         return f"{self.name}: {self.midi}, {self.freq}"

@@ -1,3 +1,5 @@
+from classes.notes import Note
+
 """
 ************************************
 ************************************
@@ -12,7 +14,10 @@ class Chord():
         self.name = name
         self.size = size
         self.intervals = intervals
-        self.root = root
+        if isinstance(root, Note):
+            self.root = root
+        else:
+            print("Chord instance was not given a valid root Note")
 
     def __str__(self):
         return f"{self.root.name} {self.name} Chord"

@@ -54,7 +54,6 @@ class Sequence:
                     sequence_data.append(next_degree)
                     current_degree = next_degree
 
-        # return list is a dict that has sequence degrees and directions for getting midi (although now maybe directions are easy to access?)
         return sequence_data
 
     def getSequenceRootsMIDI(self, scale, current_degree, octaves):

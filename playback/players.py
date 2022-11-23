@@ -18,7 +18,10 @@ in some alternating fashion ... either just play them directly, or interleave th
 """
 # Takes a Score object and plays the Voices therein
 def serialPlayer(score, tempo):
-    
+
+    # pedal off
+    out.send(mido.Message('control_change', control=64, value=63))
+
     # Play the threads in order
     for voice in score.voices:
         # items in thread will be either notes or chords
@@ -35,7 +38,8 @@ def serialPlayer(score, tempo):
             else:
                 if item.midi > 0 and item.midi <= 127:
                     out.send(mido.Message('note_on', note=item.midi, velocity=item.vel))
-                    sleep(60 / tempo)
+                    sleep(item.dur)
+                    out.send(mido.Message('note_off', note=item.midi, velocity=item.vel))
 
 def parallelPlayer(threads, tempo):
 

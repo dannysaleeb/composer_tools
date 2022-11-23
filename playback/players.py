@@ -16,10 +16,16 @@ def serialPlayer(threads, tempo):
     
     # Play the threads in order
     for thread in threads:
-        for note in thread:
+        for item in thread:
+            # If item in thread is a chord ... but maybe these should just be Chords and notes instead of getting the midi ... 
+            if type(item) == list:
+                    for i in range(len(item)):
+                        if item[i] > 0 and item[i] <= 127:
+                            out.send(mido.Message('note_on', note=item[i]))
+                    sleep(60 / tempo)
             # check value within MIDI range
-            if note > 0 and note <= 127:
-                out.send(mido.Message('note_on', note=note))
+            elif item > 0 and item <= 127:
+                out.send(mido.Message('note_on', note=item))
                 sleep(60 / tempo)
 
 def parallelPlayer(threads, tempo):

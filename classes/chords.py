@@ -20,7 +20,7 @@ class Chord():
             print("Chord instance was not given a valid root Note")
 
     def __str__(self):
-        return f"{self.root.name} {self.name} Chord"
+        return f"{self.root.name}{self.name} Chord"
 
     def getRootPosMIDI(self):
         

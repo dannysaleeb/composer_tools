@@ -6,6 +6,12 @@ class Voice:
         self.tempo = tempo
         self.content = content
 
+    def __str__(self):
+        voice = '\n'
+        for item in self.content:
+            voice += f"| {item.value}: {item.name} | "
+        return voice + '\n'
+
     # format voice in some way? 
     # What do I want to be able to do?
     # It would be good to be able to treat a voice as having some kind of 

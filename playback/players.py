@@ -13,23 +13,31 @@ in some alternating fashion ... either just play them directly, or interleave th
 
 """
 def serialPlayer(threads, tempo):
+    
+    # Play the threads in order
     for thread in threads:
         for note in thread:
-            out.send(mido.Message('note_on', note=note))
-            sleep(60 / tempo)
+            # check value within MIDI range
+            if note > 0 and note <= 127:
+                out.send(mido.Message('note_on', note=note))
+                sleep(60 / tempo)
 
-# Make so that this tries indices, but doesn't crash if it gets Index error (or whatever)
 def parallelPlayer(threads, tempo):
+
+    # Determine the length of the longest thread
     longest_thread = 0
     for i in range(len(threads)):
         if len(threads[i]) > longest_thread:
                 longest_thread = len(threads[i])
-    print(longest_thread)
+               
     for i in range(longest_thread):
         for j in range(len(threads)):
+            # In the case that threads are different lengths
             try:
                 note = threads[j][i]
             except IndexError:
                 continue
-            out.send(mido.Message('note_on', note=note))
+            # check value is within MIDI range
+            if note > 0 and note <= 127:
+                out.send(mido.Message('note_on', note=note))
         sleep(60 / tempo)

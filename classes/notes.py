@@ -12,8 +12,7 @@ DYNAMICS = {
         'ffff': 123
 }
 
-NOTES = {
-
+note_to_midi_frequency = {
     "C": {"midi": 60, "frequency": 277.18},
     "C#": {"midi": 61, "frequency": 277.18},
     "Db": {"midi": 61, "frequency": 277.18},
@@ -33,6 +32,8 @@ NOTES = {
     "B": {"midi": 71, "frequency": 493.88}
 }
 
+# I'm sure there's a better way than this ...
+
 class Note:
     def __init__(self, midi, frequency=None, duration=1, dynamic='mf', articulation='nat'):
         self.midi = midi
@@ -42,7 +43,7 @@ class Note:
         self.vel = DYNAMICS[dynamic]
         self.articulation = articulation
 
-        for k, v in NOTES.items():
+        for k, v in note_to_midi_frequency.items():
             if v['midi'] % 12 == self.midi % 12:
                 self.name = k
             else:
@@ -70,26 +71,26 @@ I have a feeling this could be done with a .csv file, which might be cleverer --
 Might be neater...
 
 """
-# NOTES = {
+NOTES = {
 
-#     "C": Note("C", 60, 261.63),
-#     "C#": Note("C#", 61, 277.18),
-#     "Db": Note("Db", 61, 277.18),
-#     "D": Note("D", 62, 293.66),
-#     "D#": Note("D#", 63, 311.13),
-#     "Eb": Note("Eb", 63, 311.13),
-#     "E": Note("E", 64, 329.63),
-#     "F": Note("F", 65, 349.23),
-#     "F#": Note("F#", 66, 369.99),
-#     "Gb": Note("Gb", 66, 369.99),
-#     "G": Note("G", 67, 392.00),
-#     "G#": Note("G#", 68, 415.30),
-#     "Ab": Note("Ab", 68, 415.30),
-#     "A": Note("A", 69, 440.00),
-#     "A#": Note("A#", 70, 466.16),
-#     "Bb": Note('Bb', 70, 466.16),
-#     "B": Note("B", 71, 493.88)
-# }
+    "C": Note(note_to_midi_frequency["C"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "C#": Note(note_to_midi_frequency["C#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "Db": Note(note_to_midi_frequency["Db"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "D": Note(note_to_midi_frequency["D"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "D#": Note(note_to_midi_frequency["D#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "Eb": Note(note_to_midi_frequency["Eb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "E": Note(note_to_midi_frequency["E"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "F": Note(note_to_midi_frequency["F"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "F#": Note(note_to_midi_frequency["F#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "Gb": Note(note_to_midi_frequency["Gb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "G": Note(note_to_midi_frequency["G"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "G#": Note(note_to_midi_frequency["G#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "Ab": Note(note_to_midi_frequency["Ab"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "A": Note(note_to_midi_frequency["A"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "A#": Note(note_to_midi_frequency["A#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "Bb": Note(note_to_midi_frequency["Bb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
+    "B": Note(note_to_midi_frequency["B"]["midi"], note_to_midi_frequency["C"]["frequency"])
+}
 
 class B(Note):
     def __init__(self, name, midi, frequency=None, delta=8, duration=8, velocity=100, value="Breve"):

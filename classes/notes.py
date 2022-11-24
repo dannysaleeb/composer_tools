@@ -1,5 +1,4 @@
 # Couple of global look-up tables??
-
 DYNAMICS = {
         'pppp': 13,
         'ppp': 25,
@@ -35,12 +34,13 @@ NOTES = {
 }
 
 class Note:
-    def __init__(self, midi, frequency=None, duration=1, dynamic='mf'):
+    def __init__(self, midi, frequency=None, duration=1, dynamic='mf', articulation='nat'):
         self.midi = midi
         self.freq = frequency
         self.dur = duration
         self.dynamic = dynamic
         self.vel = DYNAMICS[dynamic]
+        self.articulation = articulation
 
         for k, v in NOTES.items():
             if v['midi'] == self.midi:

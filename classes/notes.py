@@ -1,11 +1,52 @@
+# Couple of global look-up tables??
+
+DYNAMICS = {
+        'pppp': 13,
+        'ppp': 25,
+        'pp': 37,
+        'p': 49,
+        'mp': 61,
+        'mf': 73,
+        'f': 85,
+        'ff': 97,
+        'fff': 109,
+        'ffff': 123
+}
+
+NOTES = {
+
+    "C": {"midi": 60, "frequency": 277.18}
+    # "C#": Note("C#", 61, 277.18),
+    # "Db": Note("Db", 61, 277.18),
+    # "D": Note("D", 62, 293.66),
+    # "D#": Note("D#", 63, 311.13),
+    # "Eb": Note("Eb", 63, 311.13),
+    # "E": Note("E", 64, 329.63),
+    # "F": Note("F", 65, 349.23),
+    # "F#": Note("F#", 66, 369.99),
+    # "Gb": Note("Gb", 66, 369.99),
+    # "G": Note("G", 67, 392.00),
+    # "G#": Note("G#", 68, 415.30),
+    # "Ab": Note("Ab", 68, 415.30),
+    # "A": Note("A", 69, 440.00),
+    # "A#": Note("A#", 70, 466.16),
+    # "Bb": Note('Bb', 70, 466.16),
+    # "B": Note("B", 71, 493.88)
+}
+
 class Note:
-    def __init__(self, name, midi, frequency=None, delta=1, duration=1, velocity=100):
-        self.name = name
+    def __init__(self, midi, frequency=None, duration=1, dynamic='mf'):
         self.midi = midi
-        self.delta = delta
         self.freq = frequency
         self.dur = duration
-        self.vel = velocity
+        self.dynamic = dynamic
+        self.vel = DYNAMICS[dynamic]
+
+        for k, v in NOTES.items():
+            if v['midi'] == self.midi:
+                self.name = k
+            else:
+                self.name = "?"
 
     def __str__(self):
         return f"{self.name}: {self.midi}, {self.freq}"
@@ -29,26 +70,26 @@ I have a feeling this could be done with a .csv file, which might be cleverer --
 Might be neater...
 
 """
-NOTES = {
+# NOTES = {
 
-    "C": Note("C", 60, 261.63),
-    "C#": Note("C#", 61, 277.18),
-    "Db": Note("Db", 61, 277.18),
-    "D": Note("D", 62, 293.66),
-    "D#": Note("D#", 63, 311.13),
-    "Eb": Note("Eb", 63, 311.13),
-    "E": Note("E", 64, 329.63),
-    "F": Note("F", 65, 349.23),
-    "F#": Note("F#", 66, 369.99),
-    "Gb": Note("Gb", 66, 369.99),
-    "G": Note("G", 67, 392.00),
-    "G#": Note("G#", 68, 415.30),
-    "Ab": Note("Ab", 68, 415.30),
-    "A": Note("A", 69, 440.00),
-    "A#": Note("A#", 70, 466.16),
-    "Bb": Note('Bb', 70, 466.16),
-    "B": Note("B", 71, 493.88)
-}
+#     "C": Note("C", 60, 261.63),
+#     "C#": Note("C#", 61, 277.18),
+#     "Db": Note("Db", 61, 277.18),
+#     "D": Note("D", 62, 293.66),
+#     "D#": Note("D#", 63, 311.13),
+#     "Eb": Note("Eb", 63, 311.13),
+#     "E": Note("E", 64, 329.63),
+#     "F": Note("F", 65, 349.23),
+#     "F#": Note("F#", 66, 369.99),
+#     "Gb": Note("Gb", 66, 369.99),
+#     "G": Note("G", 67, 392.00),
+#     "G#": Note("G#", 68, 415.30),
+#     "Ab": Note("Ab", 68, 415.30),
+#     "A": Note("A", 69, 440.00),
+#     "A#": Note("A#", 70, 466.16),
+#     "Bb": Note('Bb', 70, 466.16),
+#     "B": Note("B", 71, 493.88)
+# }
 
 class B(Note):
     def __init__(self, name, midi, frequency=None, delta=8, duration=8, velocity=100, value="Breve"):

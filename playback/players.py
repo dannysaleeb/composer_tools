@@ -12,8 +12,19 @@ from classes.voices import Voice
 
 """
 
-What do I want the player to be able to do?? first of all, I want it to be able to play a list of midi values
-in some alternating fashion ... either just play them directly, or interleave them according to what?
+What it needs to do:
+
+1. Create a midi file, with all the relevant meta-information
+    - take each voice and create a MidiTrack that has all of the information in that voice (notes & chords)
+    - add all voices into a MidiFile (MidiFile.tracks)
+    - also create any necessary meta-information ... so if there's structural information ... beats and barlines ... these 
+      need to align with notes info. 
+
+2. Think about how notes in scales are produced -- they need duration now (note_on and note_off pairs, dictated by duration)
+
+So ... 
+
+    1. Look at Note class -- does it have all of the midi information it might need?
 
 """
 # Takes a Score object and plays the Voices therein

@@ -10,6 +10,17 @@ class Note:
     def __str__(self):
         return f"{self.name}: {self.midi}, {self.freq}"
 
+"""
+What does a Note need to produce useful MIDI info?:
+
+midi value
+duration (in beats / ticks / time? -- quarter note is actually considered 1 beat ... eek ... but I suppose possible for MIDI)
+dynamic (which will be parsed as velocity info: pppp: 1 ppp: 13 pp: 25 p: 37 mp: 49 mf: 61 f: 73 ff: 85 fff: 97 ffff: 109 ... 123 spread across 1-127)
+articulation (which presumably will modulate the note length to some extent? Or, in cases where I have a good sample library, will use program change to 
+select appropriate articulations)
+
+"""
+
 
 """
 Note look-up table (notes specified as default in "middle" range)

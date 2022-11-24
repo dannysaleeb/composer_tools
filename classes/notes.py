@@ -13,7 +13,7 @@ DYNAMICS = {
 }
 
 note_to_midi_frequency = {
-    "C": {"midi": 60, "frequency": 277.18},
+    "C": {"midi": 60, "frequency": 261.63},
     "C#": {"midi": 61, "frequency": 277.18},
     "Db": {"midi": 61, "frequency": 277.18},
     "D": {"midi": 62, "frequency": 293.66},
@@ -35,8 +35,9 @@ note_to_midi_frequency = {
 # I'm sure there's a better way than this ...
 
 class Note:
-    def __init__(self, midi, frequency=None, duration=1, dynamic='mf', articulation='nat'):
+    def __init__(self, midi, octave=4, frequency=None, duration=1, dynamic='mf', articulation='nat'):
         self.midi = midi
+        self.octave = octave
         self.freq = frequency
         self.dur = duration
         self.dynamic = dynamic
@@ -46,11 +47,19 @@ class Note:
         for k, v in note_to_midi_frequency.items():
             if v['midi'] % 12 == self.midi % 12:
                 self.name = k
+                break
             else:
                 self.name = "?"
 
+        if self.freq == None:
+            try: 
+                if note_to_midi_frequency[self.name]:
+                    self.freq = note_to_midi_frequency[self.name]['frequency']
+            except KeyError:
+                pass
+
     def __str__(self):
-        return f"{self.name}: {self.midi}, {self.freq}"
+        return f"{self.name}{self.octave}"
 
 """
 What does a Note need to produce useful MIDI info?:

@@ -11,7 +11,7 @@ SCALE
 """
 class Scale:
 
-    def __init__(self, intervals, tonic=Note(60, NOTES['C']['frequency']), sharp=0):
+    def __init__(self, intervals, tonic=Note(60, NOTES['C'].freq), sharp=0):
         self.intervals = intervals
         self.length = len(self.intervals) + 1
         self.tonic = tonic

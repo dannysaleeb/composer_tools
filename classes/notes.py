@@ -14,23 +14,23 @@ DYNAMICS = {
 
 NOTES = {
 
-    "C": {"midi": 60, "frequency": 277.18}
-    # "C#": Note("C#", 61, 277.18),
-    # "Db": Note("Db", 61, 277.18),
-    # "D": Note("D", 62, 293.66),
-    # "D#": Note("D#", 63, 311.13),
-    # "Eb": Note("Eb", 63, 311.13),
-    # "E": Note("E", 64, 329.63),
-    # "F": Note("F", 65, 349.23),
-    # "F#": Note("F#", 66, 369.99),
-    # "Gb": Note("Gb", 66, 369.99),
-    # "G": Note("G", 67, 392.00),
-    # "G#": Note("G#", 68, 415.30),
-    # "Ab": Note("Ab", 68, 415.30),
-    # "A": Note("A", 69, 440.00),
-    # "A#": Note("A#", 70, 466.16),
-    # "Bb": Note('Bb', 70, 466.16),
-    # "B": Note("B", 71, 493.88)
+    "C": {"midi": 60, "frequency": 277.18},
+    "C#": {"midi": 61, "frequency": 277.18},
+    "Db": {"midi": 61, "frequency": 277.18},
+    "D": {"midi": 62, "frequency": 293.66},
+    "D#": {"midi": 63, "frequency": 311.13},
+    "Eb": {"midi": 63, "frequency": 311.13},
+    "E": {"midi": 64, "frequency": 329.63},
+    "F": {"midi": 65, "frequency": 349.23},
+    "F#": {"midi": 66, "frequency": 369.99},
+    "Gb": {"midi": 66, "frequency": 369.99},
+    "G": {"midi": 67, "frequency": 392.00},
+    "G#": {"midi": 68, "frequency": 415.30},
+    "Ab": {"midi": 68, "frequency": 415.30},
+    "A": {"midi": 69, "frequency": 440.00},
+    "A#": {"midi": 70, "frequency": 466.16},
+    "Bb": {"midi": 70, "frequency": 466.16},
+    "B": {"midi": 71, "frequency": 493.88}
 }
 
 class Note:
@@ -43,7 +43,7 @@ class Note:
         self.articulation = articulation
 
         for k, v in NOTES.items():
-            if v['midi'] == self.midi:
+            if v['midi'] % 12 == self.midi % 12:
                 self.name = k
             else:
                 self.name = "?"

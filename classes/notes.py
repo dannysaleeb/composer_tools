@@ -1,5 +1,5 @@
 from .meta import *
-from mido import Message
+from mido import Message, MidiTrack
 """
 
 MAYBE PUT GLOBALS IN THEIR OWN FILE? Or in META??
@@ -178,3 +178,16 @@ class Notelist:
             else:
                 return_list += f"{self.notes[i].name} |"
         return return_list
+
+    def get_midi(self):
+        
+        return_track = MidiTrack()
+
+        # add settings argument to modulate velocity etc.?, could do this with conditional 
+        # which checks if settings present?
+        
+        for note in self.notes:
+            return_track.append(Message('note_on', note=note.midi, velocity=note.vel, time=0))
+            return_track.append(Message('note_off', note=note.midi, velocity=note.vel, time=note.dur))
+
+        return return_track

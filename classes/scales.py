@@ -121,12 +121,12 @@ class Scale:
         # returns a Notelist
         return asc_scale
 
-    def getDescScaleMIDI(self, octaves, starting_octave=4, closed=True):
+    def get_desc_scale(self, octaves=2, starting_octave=4, closed=True):
         if closed:
-            return [x for x in reversed(self.get_asc_scale(octaves, starting_octave))]
+            return Notelist([x for x in reversed(self.get_asc_scale(octaves, starting_octave).notes)])
         else:
-            desc_scale = [x for x in reversed(self.get_asc_scale(octaves, starting_octave))]
-            desc_scale.remove(desc_scale[-1])
+            desc_scale = Notelist([x for x in reversed(self.get_asc_scale(octaves, starting_octave).notes)])
+            desc_scale.notes.remove(desc_scale.notes[-1])
             return desc_scale
 
     def getAscDescScaleMIDI(self, octaves, starting_octave=4):

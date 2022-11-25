@@ -64,12 +64,12 @@ class Scale:
         
         return notelist
 
-    def getNotesAsDegrees(self):
+    def get_Notes_as_degrees(self):
         notes_as_degrees = {}
         
         counter = 1
 
-        for note in self.getNotes():
+        for note in self.get_Notes().notes:
             notes_as_degrees[counter] = note
             counter += 1
 

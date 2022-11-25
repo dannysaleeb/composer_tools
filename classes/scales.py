@@ -76,13 +76,14 @@ class Scale:
         return notes_as_degrees
 
 
+    # This is either redundant, or could be used to return a midi pair for specific scale degree?
     def getScaleDegreeMIDI(self, degree):
         midiValue = self.tonic.midi
         for i in range(degree - 1):
             midiValue += self.intervals[i]
         return midiValue
 
-    def getAscScaleMIDI(self, octaves, starting_octave=4, closed=True):
+    def getAscScaleMIDI(self, octaves=2, starting_octave=4, closed=True):
 
         # calculate starting note
         displacement = starting_octave - 4 # Could set this up as a _DEFAULT_OCTAVE variable and affect the NOTES table...

@@ -37,8 +37,9 @@ class Scale:
 
         return return_string
 
-    def getNotes(self):
-        scale = [self.tonic]
+    def get_Notes(self):
+        
+        notelist = Notelist([self.tonic])
         
         cumulative_midi_total = self.tonic.midi
 
@@ -50,18 +51,18 @@ class Scale:
             if self.sharp:
                 for k, v in NOTES.items():
                     if "b" not in k and v.midi == 60 + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             elif not self.sharp:
                 for k, v in NOTES.items():
                     if "#" not in k and v.midi == 60 + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             else:
                 for k, v in NOTES.items():
                     if "#" not in k and "b" not in k and v.midi == cumulative_midi_total + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             counter += 1
         
-        return scale
+        return notelist
 
     def getNotesAsDegrees(self):
         notes_as_degrees = {}

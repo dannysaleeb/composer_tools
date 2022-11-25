@@ -2,6 +2,8 @@ from .meta import *
 from mido import Message
 """
 
+MAYBE PUT GLOBALS IN THEIR OWN FILE? Or in META??
+
 Default tempo is crotchet = 500000microseconds (NB not milliseconds!!) (crot=120)
 
 so:
@@ -27,6 +29,10 @@ DYNAMICS = {
         'fff': 109,
         'ffff': 123
 }
+
+NOTE_NAMES = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B']
+
+# I can find a better way of doing this, also ... mathematically work out frequency???
 
 note_to_midi_frequency = {
     "C": {"midi": 60, "frequency": 261.63},
@@ -83,6 +89,8 @@ class Note:
         midi.append(Message('note_on', note=self.midi, velocity=self.vel, time=0))
         midi.append(Message('note_off', note=self.midi, velocity=self.vel, time=self.dur))
 
+        return midi
+
 """
 What does a Note need to produce useful MIDI info?:
 
@@ -93,35 +101,10 @@ articulation (which presumably will modulate the note length to some extent? Or,
 select appropriate articulations)
 
 """
+NOTES = {}
 
-
-"""
-Note look-up table (notes specified as default in "middle" range)
-
-I have a feeling this could be done with a .csv file, which might be cleverer -- load into memory when the program is run.
-Might be neater...
-
-"""
-NOTES = {
-
-    "C": Note(note_to_midi_frequency["C"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "C#": Note(note_to_midi_frequency["C#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "Db": Note(note_to_midi_frequency["Db"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "D": Note(note_to_midi_frequency["D"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "D#": Note(note_to_midi_frequency["D#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "Eb": Note(note_to_midi_frequency["Eb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "E": Note(note_to_midi_frequency["E"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "F": Note(note_to_midi_frequency["F"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "F#": Note(note_to_midi_frequency["F#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "Gb": Note(note_to_midi_frequency["Gb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "G": Note(note_to_midi_frequency["G"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "G#": Note(note_to_midi_frequency["G#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "Ab": Note(note_to_midi_frequency["Ab"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "A": Note(note_to_midi_frequency["A"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "A#": Note(note_to_midi_frequency["A#"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "Bb": Note(note_to_midi_frequency["Bb"]["midi"], note_to_midi_frequency["C"]["frequency"]),
-    "B": Note(note_to_midi_frequency["B"]["midi"], note_to_midi_frequency["C"]["frequency"])
-}
+for note_name in NOTE_NAMES:
+    NOTES[note_name] = Note(note_to_midi_frequency[note_name]['midi'], frequency=note_to_midi_frequency[note_name]['frequency'])
 
 class B(Note):
     def __init__(self, name, midi, frequency=None, delta=8, duration=8, velocity=100, value="Breve"):
@@ -181,5 +164,14 @@ class DSQ(Note):
     def __str__(self):
         return f"{self.value} {self.name}: [velocity: {self.velocity}]"
 
-# How would the delta be dealt with in the player?
-    # the sleep value would simply be given the current note's delta value?
+
+
+class Notelist:
+    def __init__(self, notes=[]):
+        self.notes = notes
+
+    def __str__(self):
+        list = []
+        for note in self.notes:
+            list.append(note.name)
+        return list

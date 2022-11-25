@@ -83,7 +83,7 @@ class Scale:
             midiValue += self.intervals[i]
         return midiValue
 
-    def get_asc_scale(self, octaves, starting_octave=4, closed=True):
+    def get_asc_scale(self, octaves=2, starting_octave=4, closed=True):
 
         # calculate starting note
         displacement = starting_octave - 4 # Could set this up as a _DEFAULT_OCTAVE variable and affect the NOTES table...

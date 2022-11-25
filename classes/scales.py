@@ -1,4 +1,4 @@
-from .notes import NOTES, Note
+from .notes import NOTES, Note, Notelist
 
 """
 ************************************
@@ -88,7 +88,7 @@ class Scale:
         starting_note = self.tonic.midi + (12 * displacement)
 
         # define return list variable and populate with starting tonic midi value
-        asc_scale = [Note(starting_note)]
+        asc_scale = Notelist([Note(starting_note)])
 
         # set the cumulative total to track
         cumulative_midi_total = starting_note
@@ -99,7 +99,7 @@ class Scale:
         while counter < octaves:
             for interval in self.intervals:
                 cumulative_midi_total += interval
-                asc_scale.append(Note(cumulative_midi_total))
+                asc_scale.notes.append(Note(cumulative_midi_total))
 
             # Count off one octave
             counter += 1
@@ -107,15 +107,16 @@ class Scale:
             # If all octaves have been covered, check if tonic is required and return scale
             if counter == octaves:
                 if closed:
-                    asc_scale.append(Note(starting_note + (12 * octaves)))
+                    asc_scale.notes.append(Note(starting_note + (12 * octaves)))
                     return asc_scale
                 else:
                     return asc_scale
             # Otherwise, add the tonic for the next octave, and continue
             else:
                 cumulative_midi_total = starting_note + (12 * counter)
-                asc_scale.append(Note(cumulative_midi_total))
+                asc_scale.notes.append(Note(cumulative_midi_total))
 
+        # returns a Notelist
         return asc_scale
 
     def getDescScaleMIDI(self, octaves, starting_octave=4, closed=True):

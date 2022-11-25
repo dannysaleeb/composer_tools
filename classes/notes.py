@@ -171,7 +171,10 @@ class Notelist:
         self.notes = notes
 
     def __str__(self):
-        list = []
-        for note in self.notes:
-            list.append(note.name)
-        return list
+        return_list = '| '
+        for i in range(len(self.notes)):
+            if i != len(self.notes) - 1:
+                return_list += f'{self.notes[i].name}, '
+            else:
+                return_list += f"{self.notes[i].name} |"
+        return return_list

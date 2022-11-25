@@ -1,3 +1,17 @@
+"""
+
+Default tempo is crotchet = 500000microseconds (NB not milliseconds!!) (crot=120)
+
+so:
+
+1000000 microsecs = 1 second (this tempo is 60bpm)
+60,000,000 microsecs = 1 minute
+
+to convert ... 
+
+60 / tempo (e.g. 120bpm) = 0.5secs * 1,000000 = microseconds
+
+"""
 # Couple of global look-up tables??
 DYNAMICS = {
         'pppp': 13,

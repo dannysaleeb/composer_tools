@@ -89,7 +89,7 @@ class Sequence:
     #     # sequence is a list of chord roots
 
     #     chords = []
-    #     notes_as_degrees = self.getNotesAsDegrees()
+    #     notes_as_degrees = self.get_Notes_as_degrees()
 
     #     for degree in sequence:
     #         current = degree

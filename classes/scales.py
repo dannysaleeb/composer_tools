@@ -37,8 +37,9 @@ class Scale:
 
         return return_string
 
-    def getNotes(self):
-        scale = [self.tonic]
+    def get_Notes(self):
+        
+        notelist = Notelist([self.tonic])
         
         cumulative_midi_total = self.tonic.midi
 
@@ -50,31 +51,32 @@ class Scale:
             if self.sharp:
                 for k, v in NOTES.items():
                     if "b" not in k and v.midi == 60 + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             elif not self.sharp:
                 for k, v in NOTES.items():
                     if "#" not in k and v.midi == 60 + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             else:
                 for k, v in NOTES.items():
                     if "#" not in k and "b" not in k and v.midi == cumulative_midi_total + difference:
-                        scale.append(v)
+                        notelist.notes.append(v)
             counter += 1
         
-        return scale
+        return notelist
 
-    def getNotesAsDegrees(self):
+    def get_Notes_as_degrees(self):
         notes_as_degrees = {}
         
         counter = 1
 
-        for note in self.getNotes():
+        for note in self.get_Notes().notes:
             notes_as_degrees[counter] = note
             counter += 1
 
         return notes_as_degrees
 
 
+    # This is either redundant, or could be used to return a midi pair for specific scale degree?
     def getScaleDegreeMIDI(self, degree):
         midiValue = self.tonic.midi
         for i in range(degree - 1):

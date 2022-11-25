@@ -43,14 +43,14 @@ class Sequence:
                 # if the direction of current interval is "down"
                 if cell[j][1] == "down":
                     # use scale degree from interval method giving current_degree and the current interval with "is_descending" as True
-                    next_degree = scale.getScaleDegreeFromInterval(current_degree, cell[j][0], True)
+                    next_degree = scale.get_degree_from_interval(current_degree, cell[j][0], True)
                     # add the next degree to the list
                     sequence_data.append(next_degree)
                     # make current_degree next_degree
                     current_degree = next_degree
                 else:
                     # Same process, except "is_descending" is now False
-                    next_degree = scale.getScaleDegreeFromInterval(current_degree, cell[j][0], False)
+                    next_degree = scale.get_degree_from_interval(current_degree, cell[j][0], False)
                     sequence_data.append(next_degree)
                     current_degree = next_degree
 
@@ -133,14 +133,14 @@ class Pachelbel(Sequence):
                 # if the direction of current interval is "down"
                 if cell[j][1] == "down":
                     # use scale degree from interval method giving current_degree and the current interval with "is_descending" as True
-                    next_degree = self.scale.getScaleDegreeFromInterval(current_degree, cell[j][0], True)
+                    next_degree = self.scale.get_degree_from_interval(current_degree, cell[j][0], True)
                     # add the next degree to the list
                     sequence_data.append(next_degree)
                     # make current_degree next_degree
                     current_degree = next_degree
                 else:
                     # Same process, except "is_descending" is now False
-                    next_degree = self.scale.getScaleDegreeFromInterval(current_degree, cell[j][0], False)
+                    next_degree = self.scale.get_degree_from_interval(current_degree, cell[j][0], False)
                     sequence_data.append(next_degree)
                     current_degree = next_degree
 

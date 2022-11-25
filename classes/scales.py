@@ -136,7 +136,7 @@ class Scale:
     def get_desc_asc(self, octaves=2, starting_octave=4):     
         return self.get_desc(octaves, starting_octave, False) + self.get_asc(octaves, starting_octave)
 
-    def getScaleDegreeFromInterval(self, degree, interval, is_descending):
+    def get_degree_from_interval(self, degree, interval, is_descending):
         if is_descending:
             new_degree = (degree + ((9 - interval) - 1)) % self.length
             return new_degree if new_degree != 0 else self.length
@@ -149,3 +149,7 @@ class Scale:
 Need to check starting octave is working ??
 
 """
+
+class MajorScale(Scale):
+    def __init__(self, tonic=Note(60), intervals=[2,2,1,2,2,2], sharp=0):
+        super().__init__(intervals, tonic, sharp)

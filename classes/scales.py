@@ -153,3 +153,20 @@ Need to check starting octave is working ??
 class MajorScale(Scale):
     def __init__(self, tonic=Note(60), intervals=[2,2,1,2,2,2], sharp=0):
         super().__init__(intervals, tonic, sharp)
+
+class HarmMinorScale(Scale):
+    pass
+
+class MelMinorScale(Scale):
+    pass
+
+class NatMinorScale(Scale):
+    pass
+
+class PentatonicMajScale(Scale):
+    pass
+
+class PentatonicMinScale(Scale):
+    pass
+
+

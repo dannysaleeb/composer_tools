@@ -81,7 +81,7 @@ class Scale:
             midiValue += self.intervals[i]
         return midiValue
 
-    def getAscScaleMIDI(self, octaves, starting_octave=4, closed=True):
+    def get_asc_scale(self, octaves, starting_octave=4, closed=True):
 
         # calculate starting note
         displacement = starting_octave - 4 # Could set this up as a _DEFAULT_OCTAVE variable and affect the NOTES table...
@@ -121,18 +121,18 @@ class Scale:
 
     def getDescScaleMIDI(self, octaves, starting_octave=4, closed=True):
         if closed:
-            return [x for x in reversed(self.getAscScaleMIDI(octaves, starting_octave))]
+            return [x for x in reversed(self.get_asc_scale(octaves, starting_octave))]
         else:
-            desc_scale = [x for x in reversed(self.getAscScaleMIDI(octaves, starting_octave))]
+            desc_scale = [x for x in reversed(self.get_asc_scale(octaves, starting_octave))]
             desc_scale.remove(desc_scale[-1])
             return desc_scale
 
     def getAscDescScaleMIDI(self, octaves, starting_octave=4):
-        return self.getAscScaleMIDI(octaves, starting_octave, False) + self.getDescScaleMIDI(octaves, starting_octave)
+        return self.get_asc_scale(octaves, starting_octave, False) + self.getDescScaleMIDI(octaves, starting_octave)
 
 
     def getDescAscScaleMIDI(self, octaves, starting_octave=4):     
-        return self.getDescScaleMIDI(octaves, starting_octave, False) + self.getAscScaleMIDI(octaves, starting_octave)
+        return self.getDescScaleMIDI(octaves, starting_octave, False) + self.get_asc_scale(octaves, starting_octave)
 
     def getScaleDegreeFromInterval(self, degree, interval, is_descending):
         if is_descending:

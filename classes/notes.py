@@ -179,6 +179,12 @@ class Notelist:
                 return_list += f"{self.notes[i].name} |"
         return return_list
 
+    def __add__(self, other):
+        if isinstance(other, Notelist):
+            return Notelist(self.notes + other.notes)
+        else:
+            raise TypeError("Other object must be of type Notelist")
+
     def get_midi(self):
         
         return_track = MidiTrack()

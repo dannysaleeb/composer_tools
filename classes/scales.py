@@ -83,7 +83,7 @@ class Scale:
             midiValue += self.intervals[i]
         return midiValue
 
-    def get_asc_scale(self, octaves=2, starting_octave=4, closed=True):
+    def get_asc(self, octaves=2, starting_octave=4, closed=True):
 
         # calculate starting note
         displacement = starting_octave - 4 # Could set this up as a _DEFAULT_OCTAVE variable and affect the NOTES table...
@@ -121,20 +121,20 @@ class Scale:
         # returns a Notelist
         return asc_scale
 
-    def get_desc_scale(self, octaves=2, starting_octave=4, closed=True):
+    def get_desc(self, octaves=2, starting_octave=4, closed=True):
         if closed:
-            return Notelist([x for x in reversed(self.get_asc_scale(octaves, starting_octave).notes)])
+            return Notelist([x for x in reversed(self.get_asc(octaves, starting_octave).notes)])
         else:
-            desc_scale = Notelist([x for x in reversed(self.get_asc_scale(octaves, starting_octave).notes)])
+            desc_scale = Notelist([x for x in reversed(self.get_asc(octaves, starting_octave).notes)])
             desc_scale.notes.remove(desc_scale.notes[-1])
             return desc_scale
 
-    def getAscDescScaleMIDI(self, octaves, starting_octave=4):
-        return self.get_asc_scale(octaves, starting_octave, False) + self.getDescScaleMIDI(octaves, starting_octave)
+    def get_asc_desc(self, octaves=2, starting_octave=4):
+        return self.get_asc(octaves, starting_octave, False) + self.get_desc(octaves, starting_octave)
 
 
-    def getDescAscScaleMIDI(self, octaves, starting_octave=4):     
-        return self.getDescScaleMIDI(octaves, starting_octave, False) + self.get_asc_scale(octaves, starting_octave)
+    def get_desc_asc(self, octaves=2, starting_octave=4):     
+        return self.get_desc(octaves, starting_octave, False) + self.get_asc(octaves, starting_octave)
 
     def getScaleDegreeFromInterval(self, degree, interval, is_descending):
         if is_descending:
@@ -143,3 +143,9 @@ class Scale:
         else:
             new_degree = (degree + (interval - 1)) % self.length
             return new_degree if new_degree != 0 else self.length
+
+"""
+
+Need to check starting octave is working ??
+
+"""

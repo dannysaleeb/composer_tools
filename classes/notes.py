@@ -1,3 +1,5 @@
+from .meta import *
+from mido import Message
 """
 
 Default tempo is crotchet = 500000microseconds (NB not milliseconds!!) (crot=120)
@@ -49,11 +51,12 @@ note_to_midi_frequency = {
 # I'm sure there's a better way than this ...
 
 class Note:
-    def __init__(self, midi, octave=4, frequency=None, duration=1, dynamic='mf', articulation='nat'):
+    def __init__(self, midi, octave=4, frequency=None, note_value=1, dynamic='mf', articulation='nat'):
         self.midi = midi
         self.octave = octave
         self.freq = frequency
-        self.dur = duration
+        self.note_value = note_value
+        self.dur = self.note_value * TICKS_PER_BEAT
         self.dynamic = dynamic
         self.vel = DYNAMICS[dynamic]
         self.articulation = articulation
@@ -74,6 +77,11 @@ class Note:
 
     def __str__(self):
         return f"{self.name}{self.octave}"
+
+    def get_midi_pair(self):
+        midi = []
+        midi.append(Message('note_on', note=self.midi, velocity=self.vel, time=0))
+        midi.append(Message('note_off', note=self.midi, velocity=self.vel, time=self.dur))
 
 """
 What does a Note need to produce useful MIDI info?:

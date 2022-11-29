@@ -27,7 +27,7 @@ of constructing rhythmlists that are useful ... start on git versions of this st
 
 """
 
-def parse_rhythmlist(rhythm_list, new_list=[], largest_note_value=1/4, rest_value=0, counter=0):
+def parse_rhythmlist(rhythm_list, new_list=[], largest_note_value=1/4, rest_value=0):
 
     # for each item in the list, 
     for item in rhythm_list:
@@ -37,8 +37,7 @@ def parse_rhythmlist(rhythm_list, new_list=[], largest_note_value=1/4, rest_valu
             # if list we're going in, so half duration
             changing_value /= 2
             # go on in and repeat
-            counter += 1
-            new_list, rest_value = parse_rhythmlist(item, new_list, changing_value, rest_value, counter)
+            new_list, rest_value = parse_rhythmlist(item, new_list, changing_value, rest_value)
         else:
             # if not, then it's a note or rest -- if note:
             if item:

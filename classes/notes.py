@@ -1,4 +1,4 @@
-from .meta import *
+from classes.meta import *
 from mido import Message, MidiTrack
 """
 

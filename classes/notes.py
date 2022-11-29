@@ -56,16 +56,19 @@ note_to_midi_frequency = {
 
 # I'm sure there's a better way than this ...
 
+# So now note_value is given in American system as fraction: 1, 1/2, 1/4, 1/8 ... etc.
+
 class Note:
-    def __init__(self, midi, octave=4, frequency=None, note_value=1, dynamic='mf', articulation='nat'):
+    def __init__(self, midi, octave=4, frequency=None, note_value=1/4, dynamic='mf', articulation='nat', delta=0):
         self.midi = midi
         self.octave = octave
         self.freq = frequency
         self.note_value = note_value
-        self.dur = self.note_value * TICKS_PER_BEAT
+        self.dur = int(self.note_value * TICKS_PER_WHOLE)
         self.dynamic = dynamic
         self.vel = DYNAMICS[dynamic]
         self.articulation = articulation
+        self.delta = int(delta * TICKS_PER_WHOLE)
 
         for k, v in note_to_midi_frequency.items():
             if v['midi'] % 12 == self.midi % 12:
@@ -193,7 +196,7 @@ class Notelist:
         # which checks if settings present?
         
         for note in self.notes:
-            return_track.append(Message('note_on', note=note.midi, velocity=note.vel, time=0))
+            return_track.append(Message('note_on', note=note.midi, velocity=note.vel, time=note.delta))
             return_track.append(Message('note_off', note=note.midi, velocity=note.vel, time=note.dur))
 
         return return_track

@@ -27,12 +27,12 @@ of constructing rhythmlists that are useful ... start on git versions of this st
 
 """
 
-def parse_rhythmlist(rhythm_list, new_list=[], top_value=1/4, rest_value=0, counter=0):
+def parse_rhythmlist(rhythm_list, new_list=[], largest_note_value=1/4, rest_value=0, counter=0):
 
     # for each item in the list, 
     for item in rhythm_list:
         # make sure the transforming duration variable is the same as that fed into the function at current level
-        changing_value = top_value
+        changing_value = largest_note_value
         if type(item) is list:
             # if list we're going in, so half duration
             changing_value /= 2
@@ -49,9 +49,9 @@ def parse_rhythmlist(rhythm_list, new_list=[], top_value=1/4, rest_value=0, coun
                 rest_value += changing_value
     return new_list, rest_value
 
-def get_notelist_from_rhythmlist(rhythmlist, top_value=1/4):
+def get_notelist_from_rhythmlist(rhythmlist, largest_note_value=1/16):
 
-    return Notelist(parse_rhythmlist(rhythmlist, [], top_value)[0])
+    return Notelist(parse_rhythmlist(rhythmlist, [], largest_note_value)[0])
 
 file = mido.MidiFile()
 

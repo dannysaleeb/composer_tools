@@ -1,31 +1,123 @@
-class Score:
-    def __init__(self):
-        self.xml_data = {
-            "boilerplate": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<!DOCTYPE score-partwise PUBLIC\n\t\"-//Recordare//DTD MusicXML 4.0 Partwise//EN\"\n\t\"http://www.musicxml.org/dtds/partwise.dtd\">"
-        }
-        self.midi_data = {}
+"""
+Each node has a name (the element name) and is either
+empty or not.
+
+Each node has a bunch of data, which manifests
+as attributes on the element
+
+"""
+class Node:
+    def __init__(self, name, empty=False, parent=None):
+        self.name = name
+        self.empty = empty
+        self.parent = parent
         self.children = []
+        self.data = {
+            "element": {},
+            "content": ""
+        }
+        self.depth = 0
+        parent = self.parent
+        while parent:
+            self.depth += 1
+            parent = parent.parent
+
+    def __str__(self):
+        return self.name
+
+    def add_child(self, node):
+        if isinstance(node, Node):
+            self.children.append(node)
+        else:
+            print("Can only add Nodes and descendents of Node to tree")
+
+    def set_data(self, data):
+        if data["content"]:
+            self.data["content"] = data["content"]
+        else:
+            for k,v in data.items():
+                self.data["element"][k] = v
+
+    def preorder_traversal(self, root):
+        res = []
+        if root:
+            res.append(root.data)
+            for child in root.children:
+                res = res + self.preorder_traversal(child)
+        return res
+
+
+    # SO ... data on a node gives element name and the value is a string of attributes
+    # on that element ...
+    # But also need the content of the element ... which presumably needs to be 
+    # in the data also ...
+    def get_xml(self, root):
+        xml = []
+        if root:
+            content = root.data["content"]
+            for k,v in root.data["element"].items():
+                xml.append("\t" * root.depth + f"<{k}{v}>{content}</{k}>\n")
+            for child in root.children:
+                xml = xml + self.get_xml(child)
+        return xml
+
+
+    # must be a recursive method you
+    # can define to get all nodes ...
+
+class Part(Node):
+    def __init__(self, name, parent, empty=False):
+        super().__init__(name, empty, parent)
+        self.data = {
+            "element": {"part": f" id=\"{name}\""},
+            "content": ""
+        }
+
+class Score(Node):
+    def __init__(self, name="score-partwise"):
+        super().__init__(name)
+        self.data = {
+            "xml": {
+                "boilerplate": f"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<!DOCTYPE {self.name} PUBLIC\n\t\"-//Recordare//DTD MusicXML 4.0 Partwise//EN\"\n\t\"http://www.musicxml.org/dtds/partwise.dtd\">"
+            }
+        }
 
     def get_xml(self):
         xml_string = ""
         for k,v in self.xml_data.items():
             xml_string += v + "\n"
         return xml_string
-
-class Part:
-    def __init__(self):
+        
+class Partlist(Node):
+    def __init__(self, parent, name="part-list"):
+        super().__init__(name, parent)
         self.xml_data = {
-            # MAYBE PUT NODES in the data here?? no.
-            "part": ""
+            name: ""
         }
-        self.midi_data = {}
-        self.children = []
 
-    def get_xml(self):
+    def get_tree_xml(self):
         xml_string = ""
+        attributes = ""
         for k,v in self.xml_data.items():
+            attributes = ""
+            for k, v in v.items():
+                attributes += f"{k}={v}"
             xml_string += f"<{k}>{v}</{k}>" + "\n"
-        return xml_string
+
+# class Part:
+#     def __init__(self):
+#         self.xml_data = {
+#             # MAYBE PUT NODES in the data here?? no.
+#             "part": ""
+#         }
+#         self.midi_data = {}
+#         self.children = []
+
+#     def get_xml(self):
+#         xml_string = ""
+#         for k,v in self.xml_data.items():
+#             xml_string += f"<{k}>{v}</{k}>" + "\n"
+#         return xml_string
 
 class Measure:
     pass

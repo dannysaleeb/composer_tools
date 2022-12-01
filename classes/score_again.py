@@ -1,7 +1,8 @@
 class Node:
     # Generic Node
-    def __init__(self, parent=None):
+    def __init__(self, node_type, parent=None):
         self.id = id(self)
+        self.node_type = node_type
 
         self.parent = parent
         
@@ -10,7 +11,9 @@ class Node:
         self.data = {
             "xml": {
                 "empty": False,
-                "element": {},
+                "element": {
+                    f"{self.node_type}": ""
+                },
                 "content": ""
             },
             "midi": {}
@@ -23,7 +26,7 @@ class Node:
             parent = parent.parent
 
     def __str__(self):
-        return f"Node: {self.id}"
+        return f"Node: {self.node_type}"
 
     def set_element(self, data):
         for k,v in data.items():
@@ -33,8 +36,11 @@ class Node:
         self.data['xml']['content'] = data
         self.data['xml']['empty'] = False
 
-    def add_child(self):
-        self.children.append(Node(self))
+    def add_child(self, node):
+        if isinstance(node, Node):
+            self.children.append(node)
+        else:
+            print("can only add Node")
 
     def set_data(self, data):
         if data["content"]:
@@ -69,22 +75,91 @@ class Node:
                 xml.append("\t" * root.depth + f"</{k}>")
         return xml
 
+class Score(Node):
+    def __init__(self, type="score-partwise", parent=None):
+        super().__init__(type, parent)
+
+        self.data = {
+            "xml": {
+                "empty": False,
+                "element": {
+                    f"{self.node_type}": " version=\"4.0\""
+                },
+                "content": ""
+            },
+            "midi": {}
+        }
+
+"""
+************
+************
+Level 1 Nodes -- sub-branches of Score (root) node
+
+Part and Meta nodes inherit from Node class and generally are added to the Score root node.
+************
+************
+"""
+class Part(Node):
+    def __init__(self, instrument, type="part", parent=None):
+        super().__init__(type, parent)
+
+        self.instrument = instrument
+        self.data = {
+                "xml": {
+                    "empty": False,
+                    "element": {
+                        f"{self.node_type}": f" id=\"{self.instrument}: {self.id}\""
+                    },
+                    "content": ""
+                },
+                "midi": {}
+        }
+
+    # Need to come up with a neat way to number measures ...
+
+class Meta(Node):
+    def __init__(self, type, parent=None):
+        super().__init__(type, parent)
+
+"""
+************
+************
+Level 2(a) Nodes -- sub-branches of Part node
+
+Part and Meta nodes inherit from Node class and generally are added to the Score root node.
+************
+************
+"""
+
+class Measure(Node):
+    def __init__(self, type, parent=None):
+        super().__init__(type, parent)
+
+    def number_measures(self):
+        for num, child in self.parent.children:
+            if child.type == "measure":
+                 child.data["measure"] = f" number=\"{num}\""
+
 if __name__ == "__main__":
 
-    root = Node()
-    root.set_element({"score-partwise": " version=\"4.0\""})
+    score = Score()
+    meta = Node("meta", score)
 
-    for i in range(10):
-        root.add_child()
-        print(root.children[i].depth)
-        root.children[i].set_element({"part": f" id=\"{root.children[i].id}\""})
-        root.children[i].set_content(i)
+    instruments = ['violin', 'viola', 'cello']
 
-    for child in root.children:
-        child.add_child()
-        for child in child.children:
-            child.set_element({"measure": f" number=\'1\'"})
+    for instrument in instruments:
+        score.add_child(Part(instrument, 'part', score))
 
-    for item in root.get_xml(root):
+    for child in score.children:
+        if child.node_type == "part":
+            for i in range(10):
+                child.add_child(Measure('measure', child))
+
+    for item in score.get_xml(score):
         print(item)
 
+"""
+
+At some point need to look up how to write this stuff to a file.
+
+"""

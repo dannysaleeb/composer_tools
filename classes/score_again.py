@@ -6,6 +6,7 @@ class Node:
 
         self.parent = parent
         
+        # Make children a dict, with different categories...
         self.children = []
         
         self.data = {
@@ -79,6 +80,8 @@ class Score(Node):
     def __init__(self, type="score-partwise", parent=None):
         super().__init__(type, parent)
 
+        self.parts = []
+
         self.data = {
             "xml": {
                 "empty": False,
@@ -89,6 +92,9 @@ class Score(Node):
             },
             "midi": {}
         }
+
+    def add_part(self, instrument):
+        self.parts.append(Part(instrument, parent=self))
 
 """
 ************
@@ -103,6 +109,8 @@ class Part(Node):
     def __init__(self, instrument, type="part", parent=None):
         super().__init__(type, parent)
 
+        self.measures = []
+
         self.instrument = instrument
         self.data = {
                 "xml": {
@@ -114,8 +122,9 @@ class Part(Node):
                 },
                 "midi": {}
         }
-
-    # Need to come up with a neat way to number measures ...
+    
+    def add_measure(self, number):
+        self.measures.append(Measure(number, parent=self))
 
 class Meta(Node):
     def __init__(self, type, parent=None):
@@ -126,19 +135,88 @@ class Meta(Node):
 ************
 Level 2(a) Nodes -- sub-branches of Part node
 
-Part and Meta nodes inherit from Node class and generally are added to the Score root node.
+Mainly Measures ...
 ************
 ************
 """
-
 class Measure(Node):
-    def __init__(self, type, parent=None):
+    def __init__(self, number, type="measure", parent=None):
         super().__init__(type, parent)
+
+        self.number = number
+        self.data = {
+                "xml": {
+                    "empty": False,
+                    "element": {
+                        f"{self.node_type}": f" number=\"{self.number}\""
+                    },
+                    "content": ""
+                },
+                "midi": {}
+        }
+
+        self.notes = []
+
+    def add_note(self, note):
+        self.notes.append(Note())
 
     def number_measures(self):
         for num, child in self.parent.children:
             if child.type == "measure":
                  child.data["measure"] = f" number=\"{num}\""
+
+"""
+************
+************
+Level 3 Nodes -- sub-branches of Measure node
+
+Notes, mainly.
+************
+************
+"""
+# Already have a Note class -- just need to adapt it here.
+# "type" should really be "xml_element"
+
+# How to get the xml data for Note?
+class Note(Node):
+    def __init__(self, pitch, octave, duration, type="note", parent=None):
+        super().__init__(type, parent)
+        self.pitch = pitch
+        self.octave = octave
+        self.duration = duration
+
+        self.children = []
+
+        self.instrument = instrument
+        self.data = {
+                "xml": {
+                    "empty": False,
+                    "element": {
+                        f"{self.node_type}": ""
+                    },
+                    "content": {
+                        "pitch": {
+                            "step": f"{self.pitch}",
+                            "octave": f"{self.octave}"
+                        },
+                        "duration": f"{self.duration}",
+                        "type": "quarter"
+                    }
+                },
+                "midi": {}
+        }
+    # NEED TO FIX
+    def get_xml_content(self, element, counter=0):
+        content = ""
+        for k,v in element.items():
+            if isinstance(v, dict):
+                content += "\t" * counter + f"<{k}>"
+                counter += 1
+                self.get_xml_content(v)
+            else:
+                content += "\t" * counter + f"<{k}>{v}</{k}>"
+            content += "\t" * counter + f"</{k}>"
+        return content
 
 if __name__ == "__main__":
 
@@ -153,13 +231,26 @@ if __name__ == "__main__":
     for child in score.children:
         if child.node_type == "part":
             for i in range(10):
-                child.add_child(Measure('measure', child))
+                child.add_child(Measure(i+1, "measure", child))
+
 
     for item in score.get_xml(score):
         print(item)
 
+    note = Note("C", 4, 1)
+
+    content = note.get_xml_content(note.data["xml"]["content"])
+
+    print(content)
+
+
+
 """
 
 At some point need to look up how to write this stuff to a file.
+
+Can have add_part method on Score (and self.parts)
+Can have add_measure method on Part (and self.measures)
+Can have add_note method on Measure (and self.notes)
 
 """

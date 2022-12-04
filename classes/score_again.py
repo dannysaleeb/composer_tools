@@ -133,6 +133,8 @@ class Score(Node):
 
         self.parts = []
 
+        self.children = [Partlist(parent=self)]
+
         self.data = {
             "xml": {
                 "empty": False,
@@ -175,8 +177,8 @@ class Part(Node):
         }
 
         for child in self.parent.children:
-            if type(child) is Partlist:
-                child.data["xml"]["content"][""]
+            if isinstance(child, Partlist):
+                child.add_child(Scorepart(self.id, self.instrument, parent=child))
     
     def add_measure(self, number):
         self.measures.append(Measure(number, parent=self))
@@ -200,6 +202,23 @@ class Partlist(Node):
 class Meta(Node):
     def __init__(self, type, parent=None):
         super().__init__(type, parent)
+
+class Scorepart(Node):
+    def __init__(self, id, instrument, type="score-part", parent=None):
+        super().__init__(type, parent)
+        self.id = id
+        self.instrument = instrument
+
+        self.data = {
+                "xml": {
+                    "empty": False,
+                    "element": {
+                        f"{self.node_type}": f" id=\"{self.instrument}: {self.id}\""
+                    },
+                    "content": ""
+                },
+                "midi": {}
+        }
 
 """
 ************
@@ -304,8 +323,6 @@ class Note(Node):
             content_string += item
 
         return content_string
-
-
     
 
 if __name__ == "__main__":
@@ -324,10 +341,11 @@ if __name__ == "__main__":
                 child.add_child(Measure(i+1, "measure", child))
 
     for child in score.children:
-        for grandchild in child.children:
-            grandchild.add_child(Note("C", 4, 1, parent=grandchild))
-            for note in grandchild.children:
-                print(note.depth)
+        if child.node_type == "part":       
+            for grandchild in child.children:
+                grandchild.add_child(Note("C", 4, 1, parent=grandchild))
+                for note in grandchild.children:
+                    print(note.depth)
 
 # Need to find a way of making sure each node gets depth ... when they're attached to the node above ... (or attached
 # using add_child() method)

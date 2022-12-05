@@ -71,11 +71,8 @@ articulation (which presumably will modulate the note length to some extent? Or,
 select appropriate articulations)
 
 """
-# NOTES = {}
 
-# for note_name in NOTE_NAMES:
-#     NOTES[note_name] = Note(NOTE_TO_MIDI_FREQUENCY[note_name]['midi'], frequency=NOTE_TO_MIDI_FREQUENCY[note_name]['frequency'])
-
+# Presumably these all need reworking...
 class B(Note):
     def __init__(self, name, midi, frequency=None, delta=8, duration=8, velocity=100, value="Breve"):
         super().__init__(name, midi, frequency, delta, duration, velocity)
@@ -144,9 +141,9 @@ class Notelist:
         return_list = '| '
         for i in range(len(self.notes)):
             if i != len(self.notes) - 1:
-                return_list += f'{self.notes[i].name}, '
+                return_list += f'{self.notes[i].pitch}, '
             else:
-                return_list += f"{self.notes[i].name} |"
+                return_list += f"{self.notes[i].pitch} |"
         return return_list
 
     def __add__(self, other):
@@ -171,6 +168,7 @@ class Notelist:
 if __name__ == "__main__":
 
     noteList = Notelist([Note("C", 4), Note("D", 4), Note("E", 4)])
+    print(noteList)
 
     file = MidiFile()
 

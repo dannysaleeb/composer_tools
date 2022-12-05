@@ -82,7 +82,6 @@ class Node:
                     content = self.get_xml_content(root.data["xml"]["content"], root.depth)
                     for k,v in root.data["xml"]["element"].items():
                         # Why is root.depth always 0 here?
-                        print(root.depth)
                         xml.append("\t" * root.depth + f"<{k}{v}>\n{content}")
                         xml.append("\t" * root.depth + f"</{k}>")
                 else:
@@ -94,7 +93,6 @@ class Node:
                 # Why is this type str???
                 if isinstance(content, dict):
                     content = self.get_xml_content(root.data["xml"]["content"], root.depth)
-                print(f"CONTENT 2 is: \n{content}")
                 for k,v in root.data["xml"]["element"].items():
                     xml.append("\t" * root.depth + f"<{k}{v}>{content}")
                 for child in root.children:

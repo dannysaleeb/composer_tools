@@ -1,3 +1,11 @@
+"""
+GLOBALS
+"""
+XML_BOILERPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<!DOCTYPE score-partwise PUBLIC\n\t\"-//Recordare//DTD MusicXML 4.0 Partwise//EN\"\n\t\"http://www.musicxml.org/dtds/partwise.dtd\">\n\n"
+
+"""
+SCORE TREE CLASSES
+"""
 class Node:
     # Generic Node
     def __init__(self, node_type, parent=None):
@@ -42,6 +50,11 @@ class Node:
 
     def add_child(self, node):
         if isinstance(node, Node):
+            node.depth = 0
+            parent = self
+            while parent:
+                node.depth += 1
+                parent = parent.parent
             self.children.append(node)
         else:
             print("can only add Node")
@@ -279,7 +292,7 @@ class Note(Node):
 
         self.children = []
 
-        self.instrument = instrument
+        # self.instrument = instrument
         self.data = {
                 "xml": {
                     "empty": False,
@@ -325,8 +338,50 @@ class Note(Node):
             content_string += item
 
         return content_string
-    
 
+"""
+HELPERS
+"""
+def create_score(parts, settings=None):
+    new_score = Score()
+    
+    for part in parts:
+        new_score.add_child(Part(part, parent=new_score))
+
+    part_ids = []
+    for part in new_score.children:
+        if isinstance(part, Part):
+            for i in range(4):
+                part.add_child(Measure(i+1, parent=part))
+            part_ids.append(part.id)
+
+    return new_score, part_ids
+
+def create_xml_file(filename, score):
+    try:
+        f = open(f"{filename}.xml", "x")
+    except FileExistsError:
+        overwrite = input("File already exists. Overwrite? (y/n): ")
+        if overwrite == "y":
+            f = open(f"{filename}.xml", "w")
+        else:
+            return 0
+    
+    f.write(XML_BOILERPLATE)
+
+    write_string = ''
+    for item in score.get_xml(score):
+        write_string += item
+
+    f.write(write_string)
+
+    return f
+
+
+
+"""
+TESTING...
+"""
 if __name__ == "__main__":
 
     score = Score()
@@ -356,8 +411,6 @@ if __name__ == "__main__":
         print(item)
 
 """
-
-At some point need to look up how to write this stuff to a file.
 
 Can have add_part method on Score (and self.parts)
 Can have add_measure method on Part (and self.measures)

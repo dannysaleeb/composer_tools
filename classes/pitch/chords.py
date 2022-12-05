@@ -1,4 +1,4 @@
-from classes.notes import Note
+from .note import Note
 
 """
 ************************************

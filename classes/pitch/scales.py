@@ -1,4 +1,13 @@
-from .notes import NOTES, Note, Notelist
+import os, sys
+
+# Add parent directory (classes) to sys.path
+filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(filepath)
+
+# This needs fixing!!
+from meta import NOTES
+from note import Note, Notelist
+from score import create_score, create_xml_file, Part, Measure
 
 """
 ************************************
@@ -11,7 +20,7 @@ SCALE
 """
 class Scale:
 
-    def __init__(self, intervals, tonic=Note(60), sharp=0):
+    def __init__(self, intervals, tonic=Note("C", 4), sharp=0):
         self.intervals = intervals
         self.length = len(self.intervals) + 1
         self.tonic = tonic
@@ -45,6 +54,7 @@ class Scale:
 
         counter = 1
 
+        # Do I need NOTES after all?
         for interval in self.intervals:
             cumulative_midi_total += interval
             difference = (cumulative_midi_total - 60) % 12
@@ -170,3 +180,23 @@ class PentatonicMinScale(Scale):
     pass
 
 
+if __name__ == "__main__":
+
+    scale = Scale([2,3,2,2,2])
+
+    track = scale.get_asc_desc(2)
+    # for note in track.notes:
+    #     print(note.letter_name)
+
+    score, parts = create_score(['violin'])
+
+    for part in score.children:
+        if isinstance(part, Part):
+            for child in part.children:
+                for note in track.notes:
+                    child.add_child(note)
+
+    for item in score.get_xml(score):
+        print(item)
+
+    file = create_xml_file('makingHeadway', score)

@@ -3,6 +3,8 @@
 TICKS_PER_BEAT = 480
 TICKS_PER_WHOLE = TICKS_PER_BEAT * 4
 
+NOTES = {}
+
 DYNAMICS = {
         'pppp': 13,
         'ppp': 25,

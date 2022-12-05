@@ -6,8 +6,8 @@ from time import sleep
 
 out = mido.open_output(s["MIDI_OUT"])
 
-from classes.notes import Note
-from classes.chords import Chord
+from classes.pitch.note import Note
+from classes.pitch.chords import Chord
 
 """
 

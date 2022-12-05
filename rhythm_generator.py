@@ -7,7 +7,7 @@ To start with, we can look at probabilistically adding 1 or 0 within some number
 import random
 import mido
 
-from classes.rhythms import Rhythmlist, rl_to_nl
+from classes.time.rhythms import Rhythmlist, rl_to_nl
 
 NUMERATOR = 4
 DENOMINATOR = 4

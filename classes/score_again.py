@@ -26,6 +26,9 @@ class Node:
             self.depth += 1
             parent = parent.parent
 
+    def build_xml(name, atts, content=None):
+        return f"<{name} {atts}>", content, f"</{name}>"
+
     def __str__(self):
         return f"Node: {self.node_type}"
 
@@ -60,11 +63,12 @@ class Node:
     # for some reason this is a bit of a mess... 
     """
 
-    Need to get the Node content if it's a dict, and then whack it in at the right tab length ... (which needs to be applied
-    to each line within that content, so I guess it actually needs to go into the function also ... and add to the other amounts)
-    
-    The only problem is, "content" is being rendered as being between two tags on same line -- when it's a dict
-    the tags need to be treated like other tags...
+    Getting xml info should be more generic -- try creating a xml build method on Node class, 
+    which could be redefined for each class that inherits from Node. 
+
+    e.g. Part class:
+        def build_xml(content, name="part", atts=f"id=\'{self.instrument}: {self.id}\'"):
+            return f"{cont}"
 
     """
     def get_xml(self, root):

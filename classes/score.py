@@ -1,3 +1,5 @@
+import mido
+
 """
 GLOBALS
 """
@@ -377,6 +379,8 @@ def create_xml_file(filename, score):
 
     return f
 
+def create_midi_file():
+    pass
 
 
 """

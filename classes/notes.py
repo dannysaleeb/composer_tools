@@ -1,4 +1,4 @@
-from classes.meta import *
+from meta import *
 from mido import Message, MidiTrack
 """
 
@@ -200,3 +200,9 @@ class Notelist:
             return_track.append(Message('note_off', note=note.midi, velocity=note.vel, time=note.dur))
 
         return return_track
+
+if __name__ == "__main__":
+
+    note = Note(60, note_value=1/2)
+
+    print(int(note.dur / TICKS_PER_BEAT))

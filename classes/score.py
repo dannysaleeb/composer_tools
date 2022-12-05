@@ -1,4 +1,6 @@
-import mido
+from mido import Message, MidiFile, MidiTrack
+
+from meta import *
 
 """
 GLOBALS
@@ -10,9 +12,9 @@ SCORE TREE CLASSES
 """
 class Node:
     # Generic Node
-    def __init__(self, node_type, parent=None):
+    def __init__(self, xml_tag, parent=None):
         self.id = id(self)
-        self.node_type = node_type
+        self.xml_tag = xml_tag
 
         self.parent = parent
         
@@ -23,7 +25,7 @@ class Node:
             "xml": {
                 "empty": False,
                 "element": {
-                    f"{self.node_type}": ""
+                    f"{self.xml_tag}": ""
                 },
                 "content": ""
             },
@@ -40,7 +42,7 @@ class Node:
         return f"<{name} {atts}>", content, f"</{name}>"
 
     def __str__(self):
-        return f"Node: {self.node_type}"
+        return f"Node: {self.xml_tag}"
 
     def set_element(self, data):
         for k,v in data.items():
@@ -145,8 +147,8 @@ class Node:
         return content_string
 
 class Score(Node):
-    def __init__(self, type="score-partwise", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, xml_tag="score-partwise", parent=None):
+        super().__init__(xml_tag, parent)
 
         self.parts = []
 
@@ -156,7 +158,7 @@ class Score(Node):
             "xml": {
                 "empty": False,
                 "element": {
-                    f"{self.node_type}": " version=\"4.0\""
+                    f"{self.xml_tag}": " version=\"4.0\""
                 },
                 "content": ""
             },
@@ -176,8 +178,8 @@ Part and Meta nodes inherit from Node class and generally are added to the Score
 ************
 """
 class Part(Node):
-    def __init__(self, instrument, type="part", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, instrument, xml_tag="part", parent=None):
+        super().__init__(xml_tag, parent)
 
         self.measures = []
 
@@ -186,7 +188,7 @@ class Part(Node):
                 "xml": {
                     "empty": False,
                     "element": {
-                        f"{self.node_type}": f" id=\"{self.instrument}: {self.id}\""
+                        f"{self.xml_tag}": f" id=\"{self.instrument}: {self.id}\""
                     },
                     "content": ""
                 },
@@ -202,14 +204,14 @@ class Part(Node):
 
 # This is also problematic!!! but I will overcome it.
 class Partlist(Node):
-    def __init__(self, type="part-list", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, xml_tag="part-list", parent=None):
+        super().__init__(xml_tag, parent)
 
         self.data = {
                 "xml": {
                     "empty": False,
                     "element": {
-                        f"{self.node_type}": ""
+                        f"{self.xml_tag}": ""
                     },
                     "content": ""
                 },
@@ -217,12 +219,12 @@ class Partlist(Node):
         }
 
 class Meta(Node):
-    def __init__(self, type, parent=None):
-        super().__init__(type, parent)
+    def __init__(self, xml_tag, parent=None):
+        super().__init__(xml_tag, parent)
 
 class Scorepart(Node):
-    def __init__(self, id, instrument, type="score-part", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, id, instrument, xml_tag="score-part", parent=None):
+        super().__init__(xml_tag, parent)
         self.id = id
         self.instrument = instrument
 
@@ -230,7 +232,7 @@ class Scorepart(Node):
                 "xml": {
                     "empty": False,
                     "element": {
-                        f"{self.node_type}": f" id=\"{self.instrument}: {self.id}\""
+                        f"{self.xml_tag}": f" id=\"{self.instrument}: {self.id}\""
                     },
                     "content": ""
                 },
@@ -247,15 +249,15 @@ Mainly Measures ...
 ************
 """
 class Measure(Node):
-    def __init__(self, number, type="measure", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, number, xml_tag="measure", parent=None):
+        super().__init__(xml_tag, parent)
 
         self.number = number
         self.data = {
                 "xml": {
                     "empty": False,
                     "element": {
-                        f"{self.node_type}": f" number=\"{self.number}\""
+                        f"{self.xml_tag}": f" number=\"{self.number}\""
                     },
                     "content": ""
                 },
@@ -269,7 +271,7 @@ class Measure(Node):
 
     def number_measures(self):
         for num, child in self.parent.children:
-            if child.type == "measure":
+            if child.xml_tag == "measure":
                  child.data["measure"] = f" number=\"{num}\""
 
 """
@@ -286,11 +288,27 @@ Notes, mainly.
 
 # How to get the xml data for Note?
 class Note(Node):
-    def __init__(self, pitch, octave, duration, type="note", parent=None):
-        super().__init__(type, parent)
+    def __init__(self, pitch, octave, fractional_value=1/4, xml_tag="note", delta=0, parent=None):
+        super().__init__(xml_tag, parent)
+        
+        # Pitch attributes
+        """
+        Need to make midi true to octave pitch level
+        """
+        self.midi = NOTE_TO_MIDI_FREQUENCY[pitch]["midi"]
         self.pitch = pitch
+        """
+        Need to make frequency true to octave pitch level
+        """
+        self.frequency = NOTE_TO_MIDI_FREQUENCY[pitch]["frequency"]
         self.octave = octave
-        self.duration = duration
+
+        # Duration attributes
+        self.fractional_value = fractional_value
+        self.symbol = FRACTION_TO_SYMBOL[f"1/{int(1/self.fractional_value)}"]
+        self.tick_duration = int(self.fractional_value * TICKS_PER_WHOLE)
+        self.xml_duration = int(self.tick_duration / TICKS_PER_BEAT)
+        self.delta = int(delta * TICKS_PER_WHOLE)
 
         self.children = []
 
@@ -299,19 +317,34 @@ class Note(Node):
                 "xml": {
                     "empty": False,
                     "element": {
-                        f"{self.node_type}": ""
+                        f"{self.xml_tag}": ""
                     },
                     "content": {
                         "pitch": {
                             "step": f"{self.pitch}",
                             "octave": f"{self.octave}"
                         },
-                        "duration": f"{self.duration}",
+                        "duration": f"{self.xml_duration}",
                         "type": "quarter"
                     }
                 },
                 "midi": {}
         }
+
+    """
+    MIDI methods
+    """
+    # Need to find best way to record velocity of notes as an attribute and amend this method
+    def get_midi_pair(self):
+        midi = []
+        midi.append(Message('note_on', note=self.midi, velocity=100, time=0))
+        midi.append(Message('note_off', note=self.midi, velocity=100, time=self.tick_duration))
+
+        return midi
+
+    """
+    XML Methods
+    """
     # NEED TO FIX -- if it's the last in the process, don't add a space -- maybe do this by adding to a list?
     def build_xml_content(self, content_dict, counter=0):
         # The return string
@@ -397,22 +430,15 @@ if __name__ == "__main__":
         score.add_child(Part(instrument, 'part', score))
 
     for child in score.children:
-        if child.node_type == "part":
+        if isinstance(child, Part):
             for i in range(10):
                 child.add_child(Measure(i+1, "measure", child))
-
-    for child in score.children:
-        if child.node_type == "part":       
-            for grandchild in child.children:
-                grandchild.add_child(Note("C", 4, 1, parent=grandchild))
-                for note in grandchild.children:
-                    print(note.depth)
 
 # Need to find a way of making sure each node gets depth ... when they're attached to the node above ... (or attached
 # using add_child() method)
 
-    for item in score.get_xml(score):
-        print(item)
+    note = Note("C", 4)
+    print(note.get_midi_pair())
 
 """
 

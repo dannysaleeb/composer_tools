@@ -1,5 +1,6 @@
 from meta import *
-from mido import Message, MidiTrack
+from mido import Message, MidiTrack, MidiFile
+from score import Note
 """
 
 MAYBE PUT GLOBALS IN THEIR OWN FILE? Or in META??
@@ -17,82 +18,48 @@ to convert ...
 
 """
 # Couple of global look-up tables??
-DYNAMICS = {
-        'pppp': 13,
-        'ppp': 25,
-        'pp': 37,
-        'p': 49,
-        'mp': 61,
-        'mf': 73,
-        'f': 85,
-        'ff': 97,
-        'fff': 109,
-        'ffff': 123
-}
-
-NOTE_NAMES = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B']
 
 # I can find a better way of doing this, also ... mathematically work out frequency???
-
-note_to_midi_frequency = {
-    "C": {"midi": 60, "frequency": 261.63},
-    "C#": {"midi": 61, "frequency": 277.18},
-    "Db": {"midi": 61, "frequency": 277.18},
-    "D": {"midi": 62, "frequency": 293.66},
-    "D#": {"midi": 63, "frequency": 311.13},
-    "Eb": {"midi": 63, "frequency": 311.13},
-    "E": {"midi": 64, "frequency": 329.63},
-    "F": {"midi": 65, "frequency": 349.23},
-    "F#": {"midi": 66, "frequency": 369.99},
-    "Gb": {"midi": 66, "frequency": 369.99},
-    "G": {"midi": 67, "frequency": 392.00},
-    "G#": {"midi": 68, "frequency": 415.30},
-    "Ab": {"midi": 68, "frequency": 415.30},
-    "A": {"midi": 69, "frequency": 440.00},
-    "A#": {"midi": 70, "frequency": 466.16},
-    "Bb": {"midi": 70, "frequency": 466.16},
-    "B": {"midi": 71, "frequency": 493.88}
-}
 
 # I'm sure there's a better way than this ...
 
 # So now note_value is given in American system as fraction: 1, 1/2, 1/4, 1/8 ... etc.
 
-class Note:
-    def __init__(self, midi, octave=4, frequency=None, note_value=1/4, dynamic='mf', articulation='nat', delta=0):
-        self.midi = midi
-        self.octave = octave
-        self.freq = frequency
-        self.note_value = note_value
-        self.dur = int(self.note_value * TICKS_PER_WHOLE)
-        self.dynamic = dynamic
-        self.vel = DYNAMICS[dynamic]
-        self.articulation = articulation
-        self.delta = int(delta * TICKS_PER_WHOLE)
+# class Note:
+#     def __init__(self, midi, octave=4, frequency=None, note_value=1/4, dynamic='mf', articulation='nat', delta=0):
+#         self.midi = midi
+#         self.octave = octave
+#         self.freq = frequency
+#         self.note_value = note_value
+#         self.dur = int(self.note_value * TICKS_PER_WHOLE)
+#         self.dynamic = dynamic
+#         self.vel = DYNAMICS[dynamic]
+#         self.articulation = articulation
+#         self.delta = int(delta * TICKS_PER_WHOLE)
 
-        for k, v in note_to_midi_frequency.items():
-            if v['midi'] % 12 == self.midi % 12:
-                self.name = k
-                break
-            else:
-                self.name = "?"
+#         for k, v in NOTE_TO_MIDI_FREQUENCY.items():
+#             if v['midi'] % 12 == self.midi % 12:
+#                 self.name = k
+#                 break
+#             else:
+#                 self.name = "?"
 
-        if self.freq == None:
-            try: 
-                if note_to_midi_frequency[self.name]:
-                    self.freq = note_to_midi_frequency[self.name]['frequency']
-            except KeyError:
-                pass
+#         if self.freq == None:
+#             try: 
+#                 if NOTE_TO_MIDI_FREQUENCY[self.name]:
+#                     self.freq = NOTE_TO_MIDI_FREQUENCY[self.name]['frequency']
+#             except KeyError:
+#                 pass
 
-    def __str__(self):
-        return f"{self.name}{self.octave}"
+#     def __str__(self):
+#         return f"{self.name}{self.octave}"
 
-    def get_midi_pair(self):
-        midi = []
-        midi.append(Message('note_on', note=self.midi, velocity=self.vel, time=0))
-        midi.append(Message('note_off', note=self.midi, velocity=self.vel, time=self.dur))
+#     def get_midi_pair(self):
+#         midi = []
+#         midi.append(Message('note_on', note=self.midi, velocity=self.vel, time=0))
+#         midi.append(Message('note_off', note=self.midi, velocity=self.vel, time=self.dur))
 
-        return midi
+#         return midi
 
 """
 What does a Note need to produce useful MIDI info?:
@@ -104,10 +71,10 @@ articulation (which presumably will modulate the note length to some extent? Or,
 select appropriate articulations)
 
 """
-NOTES = {}
+# NOTES = {}
 
-for note_name in NOTE_NAMES:
-    NOTES[note_name] = Note(note_to_midi_frequency[note_name]['midi'], frequency=note_to_midi_frequency[note_name]['frequency'])
+# for note_name in NOTE_NAMES:
+#     NOTES[note_name] = Note(NOTE_TO_MIDI_FREQUENCY[note_name]['midi'], frequency=NOTE_TO_MIDI_FREQUENCY[note_name]['frequency'])
 
 class B(Note):
     def __init__(self, name, midi, frequency=None, delta=8, duration=8, velocity=100, value="Breve"):
@@ -196,13 +163,17 @@ class Notelist:
         # which checks if settings present?
         
         for note in self.notes:
-            return_track.append(Message('note_on', note=note.midi, velocity=note.vel, time=note.delta))
-            return_track.append(Message('note_off', note=note.midi, velocity=note.vel, time=note.dur))
+            return_track.append(Message('note_on', note=note.midi, velocity=100, time=note.delta))
+            return_track.append(Message('note_off', note=note.midi, velocity=100, time=note.tick_duration))
 
         return return_track
 
 if __name__ == "__main__":
 
-    note = Note(60, note_value=1/2)
+    noteList = Notelist([Note("C", 4), Note("D", 4), Note("E", 4)])
 
-    print(int(note.dur / TICKS_PER_BEAT))
+    file = MidiFile()
+
+    file.tracks.append(noteList.get_midi())
+
+    file.save('stillWorks.mid')

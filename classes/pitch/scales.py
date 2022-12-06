@@ -7,7 +7,7 @@ sys.path.append(filepath)
 # This needs fixing!!
 from meta import NOTES
 from note import Note, Notelist
-from score import create_score, create_xml_file, Part, Measure
+from score import create_score, create_xml_file, create_midi_file, Part, Measure
 
 """
 ************************************
@@ -190,13 +190,19 @@ if __name__ == "__main__":
 
     score, parts = create_score(['violin'])
 
+    note = Note(60, 4)
+
+    if isinstance(note, Note):
+        print("ISINSTANCE")
+    else:
+        print("NOTINSTANCE")
+
     for part in score.children:
         if isinstance(part, Part):
             for child in part.children:
                 for note in track.notes:
-                    child.add_child(note)
+                    if isinstance(note, Note):
+                        child.add_child(note)
 
-    for item in score.get_xml(score):
-        print(item)
-
-    file = create_xml_file('makingHeadway', score)
+    # file = create_xml_file('makingHeadway', score)
+    print(create_midi_file('testingMidiFile.mid', score, parts))

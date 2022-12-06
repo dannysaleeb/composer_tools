@@ -1,6 +1,6 @@
 import os, sys
 
-# Add parent directory (classes) to sys.path
+# Adds parent directory (classes) to sys.path
 filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(filepath)
 
@@ -73,7 +73,13 @@ class Note(Node):
     """
     # Need to find best way to record velocity of notes as an attribute and amend this method
     def get_midi_pair(self):
+        """
+        Returns a list containing one note_on and one corresponding note_off MIDI message.
+        """
+        # Got to be a better way to approach this? I want it to return the on and off messages not as list,
+        # but as individual items ...
         midi = []
+
         midi.append(Message('note_on', note=self.midi, velocity=100, time=0))
         midi.append(Message('note_off', note=self.midi, velocity=100, time=self.tick_duration))
 
@@ -148,13 +154,16 @@ TESTING
 """
 if __name__ == "__main__":
 
-    print(sys.path)
+    # print(sys.path)
 
-    noteList = Notelist([Note(60, 4), Note(62, 4), Note(64, 4)])
-    print(noteList)
+    # noteList = Notelist([Note(60, 4), Note(62, 4), Note(64, 4)])
+    # print(noteList)
 
     file = MidiFile()
+    note = Note(60, 4)
 
-    file.tracks.append(noteList.get_midi())
+    print(type(note))
 
-    file.save('stillWorks.mid')
+    # file.tracks.append(noteList.get_midi())
+
+    # file.save('stillWorks.mid')

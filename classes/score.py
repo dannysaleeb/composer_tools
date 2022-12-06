@@ -3,7 +3,7 @@ from mido import Message, MidiFile, MidiTrack
 from meta import *
 from node import Node
 
-from pitch.note import Note
+from pitch.note import Note, Notelist
 
 """
 GLOBALS
@@ -173,39 +173,54 @@ def create_xml_file(filename, score):
 
     write_string = ''
     for item in score.get_xml(score):
-        write_string += item
+        write_string += item + '\n'
 
     f.write(write_string)
 
     return f
 
-def create_midi_file():
-    pass
+def create_midi_file(filename, score, part_ids):
+    """
+    Need to create a track per part, append note pairs based on notes.
+    """
+    file = MidiFile()
+    tracks = {}
 
+    for id in part_ids:
+        tracks[id] = MidiTrack()
+
+    for id in part_ids:
+        for part in score.children:
+            if part.id == id:
+                for measure in part.children:
+                    for note in measure.children:
+                        if isinstance(note, Note):
+                            for item in note.get_midi_pair():
+                                tracks[id].append(item)
+
+    for k,v in tracks.items():
+        file.tracks.append(v)
+    file.save(filename)
+
+    return file.tracks
 
 """
 TESTING...
 """
 if __name__ == "__main__":
 
-    score = Score()
-    meta = Node("meta", score)
+    new_score, parts = create_score(["violin", "flute"])
 
-    instruments = ['violin', 'viola', 'cello']
+    for part in new_score.children:
+        if isinstance(part, Part):
+            for measure in part.children:
+                measure.add_child(Note(60, 4))
 
-    for instrument in instruments:
-        score.add_child(Part(instrument, 'part', score))
-
-    for child in score.children:
-        if isinstance(child, Part):
-            for i in range(10):
-                child.add_child(Measure(i+1, "measure", child))
-
-# Need to find a way of making sure each node gets depth ... when they're attached to the node above ... (or attached
-# using add_child() method)
-
-    note = Note("C", 4)
-    print(note.get_midi_pair())
+    # This is a nice way to unpack the return values from create_score directly
+    # into create_midi_file
+    # But ... obviously there is nothing else added to the file ...
+    # But can improve the function later
+    print(create_midi_file('testingMidiFile.mid', *create_score(["violin", "flute"])))
 
 """
 

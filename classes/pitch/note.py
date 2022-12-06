@@ -175,17 +175,4 @@ class Notelist:
 TESTING
 """
 if __name__ == "__main__":
-
-    # print(sys.path)
-
-    # noteList = Notelist([Note(60, 4), Note(62, 4), Note(64, 4)])
-    # print(noteList)
-
-    file = MidiFile()
-    note = Note(63, 4)
-
-    print(note.accidental)
-
-    # file.tracks.append(noteList.get_midi())
-
-    # file.save('stillWorks.mid')
+    pass

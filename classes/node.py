@@ -6,7 +6,7 @@ class Node:
 
         self.parent = parent
         
-        # Make children a dict, with different categories...
+        # Make children a dict, with different categories...?
         self.children = []
         
         self.data = {

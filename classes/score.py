@@ -210,11 +210,3 @@ def create_midi_file(filename, score, part_ids):
 """
 TESTING...
 """
-
-"""
-?
-Can have add_part method on Score (and self.parts)
-Can have add_measure method on Part (and self.measures)
-Can have add_note method on Measure (and self.notes)
-?
-"""

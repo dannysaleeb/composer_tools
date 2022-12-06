@@ -14,6 +14,9 @@ XML_BOILERPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\
 SCORE TREE CLASSES
 """
 class Score(Node):
+    """
+    Root node of the score tree.
+    """
     def __init__(self, xml_tag="score-partwise", parent=None):
         super().__init__(xml_tag, parent)
 
@@ -35,16 +38,11 @@ class Score(Node):
     def add_part(self, instrument):
         self.parts.append(Part(instrument, parent=self))
 
-"""
-************
-************
-Level 1 Nodes -- sub-branches of Score (root) node
 
-Part and Meta nodes inherit from Node class and generally are added to the Score root node.
-************
-************
-"""
 class Part(Node):
+    """
+    Child of Score, takes additional 'instrument' argument on creation, which is used for id and part-name 
+    """
     def __init__(self, instrument, xml_tag="part", parent=None):
         super().__init__(xml_tag, parent)
 
@@ -69,8 +67,11 @@ class Part(Node):
     def add_measure(self, number):
         self.measures.append(Measure(number, parent=self))
 
-# This is also problematic!!! but I will overcome it.
 class Partlist(Node):
+    """
+    Child of Score, required in xml file, and useful for reference elsewhere.
+    Automatically updated when a Part is added to Score.
+    """
     def __init__(self, xml_tag="part-list", parent=None):
         super().__init__(xml_tag, parent)
 
@@ -86,10 +87,16 @@ class Partlist(Node):
         }
 
 class Meta(Node):
+    """
+    For recording information about the score, such as titles and credits, etc.
+    """
     def __init__(self, xml_tag, parent=None):
         super().__init__(xml_tag, parent)
 
 class Scorepart(Node):
+    """
+    Child of Partlist, required by XML to itemise parts in the score, and to distniguish from actual <part></part> elements
+    """
     def __init__(self, id, instrument, xml_tag="score-part", parent=None):
         super().__init__(xml_tag, parent)
         self.id = id
@@ -106,16 +113,10 @@ class Scorepart(Node):
                 "midi": {}
         }
 
-"""
-************
-************
-Level 2(a) Nodes -- sub-branches of Part node
-
-Mainly Measures ...
-************
-************
-"""
 class Measure(Node):
+    """
+    Child of Part, container for Notes, means of defining metre in the score.
+    """
     def __init__(self, number, xml_tag="measure", parent=None):
         super().__init__(xml_tag, parent)
 

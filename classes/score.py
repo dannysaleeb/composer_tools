@@ -5,10 +5,12 @@ from node import Node
 
 from pitch.note import Note, Notelist
 
+from pitch.NOTES import NOTES
+
 """
 GLOBALS
 """
-XML_BOILERPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<!DOCTYPE score-partwise PUBLIC\n\t\"-//Recordare//DTD MusicXML 4.0 Partwise//EN\"\n\t\"http://www.musicxml.org/dtds/partwise.dtd\">\n\n"
+XML_BOILERPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<!DOCTYPE score-partwise PUBLIC\n\t\"-//Recordare//DTD MusicXML 3.0 Partwise//EN\"\n\t\"http://www.musicxml.org/dtds/partwise.dtd\">\n\n"
 
 """
 SCORE TREE CLASSES
@@ -28,7 +30,7 @@ class Score(Node):
             "xml": {
                 "empty": False,
                 "element": {
-                    f"{self.xml_tag}": " version=\"4.0\""
+                    f"{self.xml_tag}": " version=\"3.0\""
                 },
                 "content": ""
             },
@@ -215,7 +217,8 @@ if __name__ == "__main__":
     for part in new_score.children:
         if isinstance(part, Part):
             for measure in part.children:
-                measure.add_child(Note(61, 4))
+                for note in notes:
+                    measure.add_child(note)
 
     # This is a nice way to unpack the return values from create_score directly
     # into create_midi_file

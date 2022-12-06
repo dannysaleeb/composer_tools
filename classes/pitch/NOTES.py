@@ -1,4 +1,4 @@
-from note import Note
+from .note import Note
 
 # This is now essentially redundant, but I need to work out carefully how to remove
 NOTES = {

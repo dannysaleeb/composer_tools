@@ -1,4 +1,4 @@
-from scales import *
+from .scales import *
 """
 ************************************
 ************************************
@@ -84,6 +84,18 @@ class Sequence:
                     counter += 1
         
         return midi_data
+
+    def get_notelist(self, scale, current_degree, octaves):
+
+        notelist = Notelist([])
+        midi_list = self.getSequenceRootsMIDI(scale, current_degree, octaves)
+
+        # Still not properly handling pitch level octave
+        for value in midi_list:
+            notelist.notes.append(Note(value))
+
+        return notelist
+        
 
     # # FIX THIS
     # def getSequenceChordsDegrees(self, sequence, interval, size):
@@ -176,11 +188,10 @@ class Pachelbel(Sequence):
         
         return midi_data
 
-# Sequence needs to return a Notelist ...
 if __name__ == "__main__":
 
-    scale = Scale([2,2,1,2,2,2])
+    scale = Scale([2,2,1,2,2,2], Note(61))
 
     sequence = Sequence([4,2], ["down", "up"])
 
-    print(sequence.getSequenceRootsMIDI(scale, 1, 2))
+    print(sequence.get_notelist(scale, 1, 2))

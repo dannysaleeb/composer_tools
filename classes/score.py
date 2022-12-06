@@ -210,27 +210,11 @@ def create_midi_file(filename, score, part_ids):
 """
 TESTING...
 """
-if __name__ == "__main__":
-
-    new_score, parts = create_score(["violin", "flute"])
-
-    for part in new_score.children:
-        if isinstance(part, Part):
-            for measure in part.children:
-                for note in notes:
-                    measure.add_child(note)
-
-    # This is a nice way to unpack the return values from create_score directly
-    # into create_midi_file
-    # But ... obviously there is nothing else added to the file ...
-    # But can improve the function later
-    # print(create_midi_file('testingMidiFile.mid', *create_score(["violin", "flute"])))
-    create_xml_file('accidentals', new_score)
 
 """
-
+?
 Can have add_part method on Score (and self.parts)
 Can have add_measure method on Part (and self.measures)
 Can have add_note method on Measure (and self.notes)
-
+?
 """

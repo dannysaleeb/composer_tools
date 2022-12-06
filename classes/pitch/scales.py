@@ -5,7 +5,7 @@ filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(filepath)
 
 # This needs fixing!!
-from meta import NOTES
+from NOTES import NOTES
 from note import Note, Notelist
 from score import create_score, create_xml_file, create_midi_file, Part, Measure
 
@@ -55,6 +55,7 @@ class Scale:
         counter = 1
 
         # Do I need NOTES after all?
+        # THIS DEFINITELY NEEDS IMPROVING -- MusicXML approach is good with <fifths></fifths> element
         for interval in self.intervals:
             cumulative_midi_total += interval
             difference = (cumulative_midi_total - 60) % 12

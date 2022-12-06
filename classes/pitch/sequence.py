@@ -1,3 +1,4 @@
+from scales import *
 """
 ************************************
 ************************************
@@ -175,4 +176,11 @@ class Pachelbel(Sequence):
         
         return midi_data
 
-# I don't know if I need the sequence class to be able to be too complex ... I probably want to give it a scale each time...
+# Sequence needs to return a Notelist ...
+if __name__ == "__main__":
+
+    scale = Scale([2,2,1,2,2,2])
+
+    sequence = Sequence([4,2], ["down", "up"])
+
+    print(sequence.getSequenceRootsMIDI(scale, 1, 2))

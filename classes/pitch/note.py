@@ -21,16 +21,31 @@ class Note(Node):
         self.letter_name = ""
         
         self.octave = octave
+        self.accidental = ""
         
         if isinstance(pitch, int):
             self.midi = pitch
             for k,v in NOTE_TO_MIDI_FREQUENCY.items():
                 if pitch % 12 == v["midi"] % 12:
                     self.letter_name = k
+                    try:
+                        if k[1] == "b":
+                            self.accidental = "flat"
+                        else:
+                            self.accidental = "sharp"
+                    except IndexError:
+                        continue
         elif isinstance(pitch, str):
             difference = self.octave - 4
             self.midi = NOTE_TO_MIDI_FREQUENCY[pitch]["midi"] + (12 * difference)
             self.letter_name = pitch
+            try:
+                if pitch[1] == "b":
+                    self.accidental = "flat"
+                else:
+                    self.accidental = "sharp"
+            except IndexError:
+                pass
         else:
             print("Pitch must be int or string.")
             return 0
@@ -62,11 +77,18 @@ class Note(Node):
                             "octave": f"{self.octave}"
                         },
                         "duration": f"{self.xml_duration}",
-                        "type": "quarter"
+                        "type": f"{self.symbol}"
                     }
                 },
                 "midi": {}
         }
+
+        if self.accidental:
+            if self.accidental == "flat":
+                self.data['xml']['content']['pitch']['alter'] = -1
+            else:
+                self.data['xml']['content']['pitch']['alter'] = 1
+            self.data["xml"]["content"]["accidental"] = self.accidental
 
     """
     MIDI methods
@@ -160,9 +182,9 @@ if __name__ == "__main__":
     # print(noteList)
 
     file = MidiFile()
-    note = Note(60, 4)
+    note = Note(63, 4)
 
-    print(type(note))
+    print(note.accidental)
 
     # file.tracks.append(noteList.get_midi())
 

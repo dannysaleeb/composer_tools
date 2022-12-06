@@ -215,13 +215,14 @@ if __name__ == "__main__":
     for part in new_score.children:
         if isinstance(part, Part):
             for measure in part.children:
-                measure.add_child(Note(60, 4))
+                measure.add_child(Note(61, 4))
 
     # This is a nice way to unpack the return values from create_score directly
     # into create_midi_file
     # But ... obviously there is nothing else added to the file ...
     # But can improve the function later
-    print(create_midi_file('testingMidiFile.mid', *create_score(["violin", "flute"])))
+    # print(create_midi_file('testingMidiFile.mid', *create_score(["violin", "flute"])))
+    create_xml_file('accidentals', new_score)
 
 """
 

@@ -182,7 +182,7 @@ class PentatonicMinScale(Scale):
 
 if __name__ == "__main__":
 
-    scale = Scale([2,3,2,2,2])
+    scale = Scale([2,1,2,2,2,1])
 
     track = scale.get_asc_desc(2)
     # for note in track.notes:
@@ -192,11 +192,6 @@ if __name__ == "__main__":
 
     note = Note(60, 4)
 
-    if isinstance(note, Note):
-        print("ISINSTANCE")
-    else:
-        print("NOTINSTANCE")
-
     for part in score.children:
         if isinstance(part, Part):
             for child in part.children:
@@ -204,5 +199,5 @@ if __name__ == "__main__":
                     if isinstance(note, Note):
                         child.add_child(note)
 
-    # file = create_xml_file('makingHeadway', score)
-    print(create_midi_file('testingMidiFile.mid', score, parts))
+    file = create_xml_file('makingHeadway', score)
+    # print(create_midi_file('testingMidiFile.mid', score, parts))

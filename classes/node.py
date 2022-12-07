@@ -41,15 +41,16 @@ class Node:
         self.data['xml']['empty'] = False
 
     def add_child(self, node):
-        if isinstance(node, Node):
-            node.depth = 0
-            parent = self
-            while parent:
-                node.depth += 1
-                parent = parent.parent
-            self.children.append(node)
-        else:
-            print("can only add Node")
+        # ADD THIS CONDITION BACK IN WHEN TYPE ISSUE IS SORTED!!
+        # if isinstance(node, Node):
+        node.depth = 0
+        parent = self
+        while parent:
+            node.depth += 1
+            parent = parent.parent
+        self.children.append(node)
+        # else:
+        #     print("can only add Node")
 
     def set_data(self, data):
         if data["content"]:

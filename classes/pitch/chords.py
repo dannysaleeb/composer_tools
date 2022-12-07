@@ -1,5 +1,10 @@
-from .note import Note
+import os, sys
 
+# Adds parent directory (classes) to sys.path
+filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(filepath)
+
+from pitch.note import Note
 """
 ************************************
 ************************************
@@ -10,6 +15,7 @@ CHORD
 ************************************
 """
 class Chord():
+
     def __init__(self, name, size, intervals, root):
         self.name = name
         self.size = size
@@ -17,10 +23,10 @@ class Chord():
         if isinstance(root, Note):
             self.root = root
         else:
-            print("Chord instance was not given a valid root Note")
+            print(f"Chord instance was given {type(root)}, not a valid root Note")
 
     def __str__(self):
-        return f"{self.root.name}{self.name} Chord"
+        return f"{self.root.letter_name}{self.name} Chord"
 
     def getRootPosMIDI(self):
         
@@ -128,3 +134,11 @@ class Hexad(Chord):
 
 class Septad(Chord):
     pass
+
+if __name__ == "__main__":
+
+    myNote = Note(60, 4)
+    print(isinstance(myNote, Note))
+
+    myChord = Chord('Major', 3, [4,3], myNote)
+    print(myChord)

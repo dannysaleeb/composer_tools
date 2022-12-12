@@ -9,7 +9,10 @@ import mido
 
 out = mido.open_output('IAC Driver Bus 1')
 
+# I want to use this representation because it is a tree ...
 rhythmlist = [4, 1, [3, -1, 0, 1], [3, [2, -1, 1], 1, 0], [2, 1, 0]]
+
+# It means that the notes will have a durational tree representation, as well as having pitch as an attribute...
 
 # That should mean -- the bar is divided in 3, and there are 3 equally divided notes in 
 
@@ -71,6 +74,11 @@ def get_rhythms(rhythmlist, new_list=[], unit_duration=1, note_duration=0, rest_
         note_duration = 0
         rest_duration = 0
     return new_list, note_duration, rest_duration
+
+def rl_to_nl(rhythmlist, notes):
+    # create a function that brings together a notelist with pitches
+    # and the rhythmlist with rhythms...
+    pass
 
 myNotelist = get_rhythms(rhythmlist)[0]
 

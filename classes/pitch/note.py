@@ -57,7 +57,10 @@ class Note(Node):
 
         # Duration attributes
         self.fractional_value = fractional_value
-        self.symbol = FRACTION_TO_SYMBOL[f"1/{int(1/self.fractional_value)}"]
+        try:
+            self.symbol = FRACTION_TO_SYMBOL[f"1/{int(1/self.fractional_value)}"]
+        except KeyError:
+            self.symbol = None
         self.tick_duration = int(self.fractional_value * TICKS_PER_WHOLE)
         self.xml_duration = int(self.tick_duration / TICKS_PER_BEAT)
         self.delta = int(delta * TICKS_PER_WHOLE)

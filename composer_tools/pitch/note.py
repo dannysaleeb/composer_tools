@@ -1,13 +1,7 @@
-import os, sys
-
-# Adds parent directory (classes) to sys.path
-filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(filepath)
-
 from mido import Message, MidiFile, MidiTrack
 
-from node import Node
-from meta import *
+from ..structure.node import Node
+from ..structure.meta import *
 
 class Note(Node):
     def __init__(self, pitch, octave=4, fractional_value=1/4, xml_tag="note", delta=0, parent=None):

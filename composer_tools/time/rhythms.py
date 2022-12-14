@@ -1,4 +1,4 @@
-from classes.pitch.note import Note, Notelist
+from ..pitch.note import Note, Notelist
 
 class Rhythmlist:
     def __init__(self, values, largest_note_value):

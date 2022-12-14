@@ -1,10 +1,4 @@
-import os, sys
-
-# Adds parent directory (classes) to sys.path
-filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(filepath)
-
-from pitch.note import Note
+from .note import Note
 """
 ************************************
 ************************************

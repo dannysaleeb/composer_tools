@@ -1,13 +1,7 @@
-import os, sys
-
-# Add parent directory (classes) to sys.path
-filepath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(filepath)
-
 # This needs fixing!!
 from .NOTES import NOTES
 from .note import Note, Notelist
-from classes.score import create_score, create_xml_file, create_midi_file, Part, Measure
+from composer_tools.structure.score import create_score, create_xml_file, create_midi_file, Part, Measure
 
 """
 ************************************

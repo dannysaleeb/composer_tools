@@ -3,9 +3,9 @@ from mido import Message, MidiFile, MidiTrack
 from .meta import *
 from .node import Node
 
-from .pitch.note import Note, Notelist
+from ..pitch.note import Note, Notelist
 
-from .pitch.NOTES import NOTES
+from ..pitch.NOTES import NOTES
 
 """
 GLOBALS

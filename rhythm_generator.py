@@ -7,7 +7,7 @@ To start with, we can look at probabilistically adding 1 or 0 within some number
 import random
 import mido
 
-from classes.time.rhythms import Rhythmlist, rl_to_nl
+from composer_tools.time.rhythms import Rhythmlist, rl_to_nl
 
 NUMERATOR = 4
 DENOMINATOR = 4
@@ -40,7 +40,7 @@ def split(list, probability, depth):
 
 myList = [1, 1, 1, 1, 1]
 
-print(split(myList, 0.6))
+print(split(myList, 0.2, 4))
 
 """
 

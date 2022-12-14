@@ -1,10 +1,10 @@
 # This import adds the relevant filepath to access the classes package
 import setup
 
-from classes.pitch import scales
-from classes.pitch.NOTES import NOTES
+from composer_tools.pitch import scales
+from composer_tools.pitch.NOTES import NOTES
 
-from playback.players import serialPlayer, parallelPlayer
+from composer_tools.playback.players import serialPlayer, parallelPlayer
 
 myScale = scales.Scale([2,1,2,2,2,1,2], NOTES['Eb'], -1)
 print(myScale)

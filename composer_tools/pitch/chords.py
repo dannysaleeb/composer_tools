@@ -1,4 +1,4 @@
-from .note import Note
+from .note import Note, Notelist
 """
 ************************************
 ************************************
@@ -26,21 +26,21 @@ class Chord():
         
         cumulative_midi_total = self.root.midi
 
-        chord = [self.root.midi]
+        chord = [Note(self.root.midi)]
         for i in range(self.size - 1):
             cumulative_midi_total += self.intervals[i]
-            chord.append(cumulative_midi_total)
+            chord.append(Note(cumulative_midi_total))
 
-        return chord
+        return Notelist(chord)
 
     def getFirstInvMIDI(self):
 
         rootPos = self.getRootPosMIDI()
         
         # transpose bass of chord up octave
-        rootPos[0] = rootPos[0] + 12
+        rootPos.notes[0] = Note(rootPos.notes[0].midi + 12)
         # rotate chord members
-        rootPos.append(rootPos.pop(0))
+        rootPos.notes.append(rootPos.notes.pop(0))
 
         firstInv = rootPos
         return firstInv
@@ -48,9 +48,9 @@ class Chord():
     def getSecondInvMIDI(self):
         firstInv = self.getFirstInvMIDI()
         # transpose bass of chord up octave
-        firstInv[0] = firstInv[0] + 12
+        firstInv.notes[0] = Note(firstInv.notes[0].midi + 12)
         # rotate chord members
-        firstInv.append(firstInv.pop(0))
+        firstInv.notes.append(firstInv.notes.pop(0))
 
         secondInv = firstInv
         return secondInv
